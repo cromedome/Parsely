@@ -22,3 +22,13 @@ saves/ - one YAML file per saved game. YAML is name of saved game.
 
 Mission->load(), save(), validate(), etc.
 
+Goals:
+- Easy for non-techies to make content for
+- Easy to run and play
+- Few dependencies as possible
+- Get a little out of my comfort zone (YAML, Mojo)
+
+Expansion ideas:
+- Multiplayer?
+- Chat?
+
