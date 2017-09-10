@@ -29,6 +29,8 @@ Goals:
 - Get a little out of my comfort zone (YAML, Mojo)
 
 Expansion ideas:
-- Multiplayer?
+- Multiplayer? (multiple people playing single-player games)
 - Chat?
+
+Add docs for mission building.
 
