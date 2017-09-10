@@ -22,8 +22,10 @@ See https://metacpan.org/pod/CPAN::Meta::Spec#VERSION-NUMBERS for details.
 requires 'perl', '5.24.0';
 requires 'strictures';
 requires 'Moo';
+requires 'MooX::Types::MooseLike';
 requires 'Cache::FastMmap';
 requires 'Import::Base';
+requires 'YAML';
 
 on 'develop' => sub {
     requires 'App::Ack';
