@@ -67,15 +67,12 @@ sub _load_locations( $self, $config ) {
         $room->description( $loc_info->{ description } );
         $room->name( $loc_info->{ name } );
 
-        push @{ $room->items  }, $_ foreach @{ $loc_info->{ items  }};
-        push @{ $room->actors }, $_ foreach @{ $loc_info->{ actors }};
-
-        my %ways_out;
-        for my $exit( keys %{ $loc_info->{ exits }} ) {
-            $ways_out{ $exit } = $loc_info->{ exits }{ $exit };
-        }
-        $room->exits( \%ways_out );
-        #die Dumper $room;
+        $room->items     ( $loc_info->{ items  }     // [] );
+        $room->actors    ( $loc_info->{ actors }     // [] );
+        $room->exits     ( $loc_info->{ exits }      // {} );
+        $room->looks     ( $loc_info->{ looks }      // {} );
+        $room->properties( $loc_info->{ properties } // {} );
+        warn Dumper $room;
     }
 }
 

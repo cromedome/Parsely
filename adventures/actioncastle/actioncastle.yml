@@ -27,7 +27,7 @@ locations:
         exits :
             North : gardenpath
         # look: for anything you can look at that isn't an item or an actor.
-        look :
+        looks :
             pond : You see fish in the pond!
         properties:
             caught_fish: 0
