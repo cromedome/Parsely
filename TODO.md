@@ -14,7 +14,7 @@ Game actions live in existing namespace
 
 Parsely.pm - Game engine
 Parsely/Item, Actor, Location, etc: Objects that represent in game things
-Parsely/Role/Item, Actor, etc: Implements items in game engine
+Parsely/Role/Item, Actor, etc: Implements items in game engine. Use is one, etc.
 Parsely/Mission: a mission. has a YAML config file
 missions/actioncastle, etc.: mission data
 missions/actioncastle/roles: custom roles

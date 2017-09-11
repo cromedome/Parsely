@@ -5,6 +5,6 @@ use Parsely;
 
 my $engine = Parsely->new;
 
-ok( $engine->load( 'actioncastle' ), "Loaded ActionCastle mission" );
+ok( $engine->load( 'actioncastle' ), "Loaded a mission" );
 
 done_testing();
