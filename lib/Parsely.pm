@@ -46,5 +46,13 @@ sub load( $self, $adventure ) {
     return $self->adventure->load( $adventure );
 }
 
+sub game_over( $self, $condition ){
+    return 1;
+}
+
+sub take_game_action( $self, $action ) {
+    return 1;
+}
+
 1;
 
