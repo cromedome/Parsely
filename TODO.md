@@ -34,3 +34,6 @@ Expansion ideas:
 
 Add docs for mission building.
 
+Tests:
+- valid mission
+- invalid mission. Then test for everything wrong with it.
