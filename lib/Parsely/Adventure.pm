@@ -45,14 +45,39 @@ sub load( $self, $adventure ) {
 
 sub validate( $self, $config ) {
     die "No adventure configuration!" unless $config;
-    return 1;
+    
+    my $valid = 1;
+    $valid = $self->_validate_locations( $config );
+
+    return $valid;
 }
 
 # TODO: Validate actors
 # TODO: Validate items
-# TODO: Validate Area
 # TODO: Validate exits
 # TODO: Validate game over conditions
+
+sub _validate_locations( $self, $config ) {
+    die "No adventure configuration!" unless $config;
+
+    my $valid = 1;
+    my @locations = keys %{ $config->{ locations }};
+    if( @locations == 0 ) {
+        warn "No locations defined!";
+    }
+    else {
+        foreach my $location( @locations ) {
+            my $loc_info = $config->{ locations }->{ $location };
+            my $message  = "Location '$location' has no ";
+            warn "$message name!"        unless $loc_info->{ name };
+            warn "$message exits!"       unless $loc_info->{ exits };
+            warn "$message description!" unless $loc_info->{ description };
+            $valid = 0 if $message =~ /name|exits|description/;
+        }
+    }
+
+    return $valid;
+}
 
 sub _load_locations( $self, $config ) {
     die "No adventure configuration!" unless $config;
@@ -72,7 +97,7 @@ sub _load_locations( $self, $config ) {
         $room->exits     ( $loc_info->{ exits }      // {} );
         $room->looks     ( $loc_info->{ looks }      // {} );
         $room->properties( $loc_info->{ properties } // {} );
-        warn Dumper $room;
+        # TODO: actions!
     }
 }
 
