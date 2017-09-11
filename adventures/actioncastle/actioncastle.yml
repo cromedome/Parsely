@@ -5,39 +5,40 @@ locations:
     cottage:
         name: Cottage
         description : You are standing in a small cottage.
-        items : fishpole
+        items : 
+            - fishpole
         exits :
             Out : gardenpath
-    #gardenpath:
-        #name: Garden Path
-        #description : You are standing on a lush garden path.
-        #exits :
-            #South : fishpond
-            #North : windingpath
-            #In : cottage
-        #actors :
-            #bush
+    gardenpath:
+        name: Garden Path
+        description : You are standing on a lush garden path.
+        exits :
+            South : fishpond
+            North : windingpath
+            In : cottage
+        actors :
+            - bush
     ## locations can have properties...
     ## game state always passed to roles
-    #fishpond:
-        #name: Fishing Pond
-        #initial description : You are at the edge of a small fishing pond.
-        #description : You are at the edge of a small fishing pond.
-        #exits :
-            #North : gardenpath
-        ## look: for anything you can look at that isn't an item or an actor.
-        #look :
-            #pond : You see fish in the pond!
-        #properties:
-            #caught_fish: 0
-        #actions :
-            #fish :
-                #description: You catch a fish.
-                #todo: can only catch one fish
-                #aliases :
-                    #catch fish
-                    #use fishing pole
-                    #go fishing
+    fishpond:
+        name: Fishing Pond
+        initial description : You are at the edge of a small fishing pond.
+        description : You are at the edge of a small fishing pond.
+        exits :
+            North : gardenpath
+        # look: for anything you can look at that isn't an item or an actor.
+        look :
+            pond : You see fish in the pond!
+        properties:
+            caught_fish: 0
+        actions :
+            fish :
+                description: You catch a fish.
+                todo: can only catch one fish
+                aliases :
+                    - catch fish
+                    - use fishing pole
+                    - go fishing
     #windingpath:
         #name: Winding Path
         #description : You are walking along a winding path. 
