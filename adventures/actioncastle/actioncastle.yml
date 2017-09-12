@@ -131,26 +131,26 @@ locations:
         #description: This is the throne room of Action Castle. There is an ornate golden throne here.
         #actors:
             #throne : 1
-#actor:
+actor:
     #throne:
         #name : Throne
         #description: An ornate golden throne.
         #actions:
             #sit (not royal) : You think better of it since you are not royalty.
             #sit (royal) : You sit on the ornate golden throne. The people cheer for the new ruler of Action Castle! Game over.
-    #ghost:
-        #name: Spooky Ghost
-        #description: The ghost has bony, claw-like fingers, and wears a crown.
-        #action :
-            #use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
-    #sadprincess:
-        #name: Princess
-        #description: The princess is beautiful, sad, and lonely. She awates her prince.
-        #talk :
-            #generic: She looks sad, but says nothing.
-        #actions :
-            #kiss: She slaps you.
-            #give rose : takes it and smiles, transform into happyprincess
+    ghost:
+        name: Spooky Ghost
+        description: The ghost has bony, claw-like fingers, and wears a crown.
+        action :
+            use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
+    sadprincess:
+        name: Princess
+        description: The princess is beautiful, sad, and lonely. She awates her prince.
+        talk :
+            generic: She looks sad, but says nothing.
+        actions :
+            kiss: She slaps you.
+            give rose : takes it and smiles, transform into happyprincess
     #happyprincess:
         #name: Princess
         #description: The princess is beautiful, happy, but lonely. She awates her prince.
