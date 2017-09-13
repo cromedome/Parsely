@@ -37,3 +37,9 @@ Add docs for mission building.
 Tests:
 - valid mission
 - invalid mission. Then test for everything wrong with it.
+- no duplicate slugs
+
+Player: 
+- Part of game, not mission
+
+Add base object with name, description, looks, properties, save(), load()

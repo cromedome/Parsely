@@ -23,7 +23,6 @@ has adventure => (
     builder => '_build_adventure',
 );
 
-# TODO: Save after each action?
 # TODO: save() (call adventure->name)
 
 # Create a new in-memory cache for tracking game state
@@ -42,8 +41,25 @@ sub reset( $self ) {
     $self->gamestate->clear;
 }
 
+sub new_game( $self, $adventure ) {
+    # TODO: create new player object
+    # TODO: Load adventure
+    # TODO: ensure gamestate reset
+}
+
 sub load( $self, $adventure ) {
+    # TODO: create new player
+    # TODO: load adventure
+    # TODO: Load YAML
+    # TODO: Load gamestate from YAML
+    # TODO: set adventure objects from YAML
     return $self->adventure->load( $adventure );
+}
+
+sub save( $self ) {
+    # TODO: get name of adventure
+    # TODO: use get_keys(2) to get hashref of cache info
+    # TODO: write to YAML
 }
 
 sub game_over( $self, $condition ){

@@ -27,6 +27,7 @@ has locations => (
 # Load a new adventure
 sub load( $self, $adventure ) {
     die "No adventure provided!" unless $adventure;
+    # TODO: hash to check for duplicate objects
 
     my $file = "./adventures/$adventure/${ adventure }.yml";
     if( -e $file ) {
