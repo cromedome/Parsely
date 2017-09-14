@@ -3,6 +3,7 @@ package Parsely;
 use lib '.';
 use Moo;
 use Cache::FastMmap;
+use YAML qw/ DumpFile LoadFile /;
 
 use Parsely::Base;
 use Parsely::Adventure;
@@ -24,6 +25,8 @@ has player => (
     builder => '_build_player',
 );
 
+# TODO: unsaved flag?
+
 # Create a new in-memory cache for tracking game state
 sub _build_gamestate( $self ) {
     my $cache = Cache::FastMmap->new;
@@ -43,30 +46,50 @@ sub _build_player( $self ) {
 # Reset the game
 sub reset( $self ) {
     $self->gamestate->clear;
-    # TODO: reset player
+    $self->player->reset;
+    return 1;
 }
 
 sub new_game( $self, $adventure ) {
-    # TODO: create new player object
-    # TODO: Load adventure
-    # TODO: ensure gamestate reset
+    croak "No game specified to new_game()" unless $adventure;
+
+    $self->reset;
+    $self->adventure->load( $adventure );
+    return $self->start_game;
 }
 
 sub load( $self, $adventure ) {
-    # TODO: create new player
-    # TODO: load adventure
-    # TODO: Load YAML
-    # TODO: Load gamestate from YAML
+    croak "No game specified to load()" unless $adventure;
+
+    $self->reset;
+
+    my $file = "saves/${ adventure }.yml";
+    croak "Save game '$file' doesn't exist; can't load()" unless -e $file;
+    my $config = LoadFile( $file );
+    $self->gamestate->set( $_, $config->{ $_ }) foreach keys %$config;
+    $self->adventure->load( $adventure );
     # TODO: set adventure objects from YAML
-    return $self->adventure->load( $adventure );
+    
+    return 1;
 }
 
 sub save( $self ) {
-    # TODO: get name of adventure
-    # TODO: use get_keys(2) to get hashref of cache info
-    # TODO: write to YAML
+    die "No game in progress" unless $self->adventure->name;
+
+    my @game_vars = $self->gamestate->get_keys( 2 );
+    my %game_data;
+    $game_data{ $_->{ key } } = $self->gamestate->get( $_->{ key } ) foreach @game_vars;
+
+    DumpFile( "saves/" . $self->adventure->slug . ".yml", \%game_data );
+    return 1;
 }
 
+sub start_game( $self ) {
+    # TODO: we have a new game loaded. Get the player started!
+    return 1;
+}
+
+# TODO: Throw GameOver exception? Wrap actions in try/catch?
 sub game_over( $self, $condition ){
     return 1;
 }

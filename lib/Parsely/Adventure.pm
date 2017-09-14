@@ -7,7 +7,11 @@ use YAML 'LoadFile';
 use lib '.';
 use Parsely::Base;
 use Parsely::Location;
-use Data::Dumper;
+
+has slug => (
+    is  => 'rw',
+    isa => Str,
+);
 
 has name => (
     is  => 'rw',
@@ -20,6 +24,8 @@ has locations => (
 );
 
 # Load a new adventure
+# TODO: require slug in new, then call this automatically? Rename to new_game?
+# TODO: load() restores game state?
 sub load( $self, $adventure ) {
     die "No adventure provided!" unless $adventure;
     # TODO: hash to check for duplicate objects
@@ -29,6 +35,7 @@ sub load( $self, $adventure ) {
         my $config = LoadFile( $file );
         if( $config and $self->validate( $config )) {
             # Everything is valid at this point, add with impunity
+            $self->slug( $adventure );
             $self->name( $config->{ name } );
             $self->_load_locations( $config );
         }
