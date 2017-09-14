@@ -13,9 +13,20 @@ has start_location => (
 );
 
 has inventory => (
-    is  => 'rw',
-    isa => HashRef,
+    is      => 'rw',
+    isa     => HashRef,
+    default => sub{ {} },
 );
+
+sub reset( $self ) {
+    $self->slug( '' );
+    $self->name( '' );
+    $self->description( '' );
+    $self->start_location( '' );
+    $self->looks( {} );
+    $self->properties( {} );
+    $self->inventory( {} );
+}
 
 1;
 
