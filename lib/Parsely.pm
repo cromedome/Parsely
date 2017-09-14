@@ -11,6 +11,7 @@ use Cache::FastMmap;
 
 #use Parsely::Base;
 use Parsely::Adventure;
+use Parsely::Player;
 
 # Gamestate is an in-memory cache with the current game information
 has gamestate => (
@@ -21,6 +22,11 @@ has gamestate => (
 has adventure => (
     is      => 'lazy',
     builder => '_build_adventure',
+);
+
+has player => (
+    is      => 'lazy',
+    builder => '_build_player',
 );
 
 # Create a new in-memory cache for tracking game state
@@ -34,9 +40,15 @@ sub _build_adventure( $self ) {
     return $adventure;
 }
 
-# Reset the gamestate
+sub _build_player( $self ) {
+    my $player = Parsely::Player->new;
+    return $player;
+}
+
+# Reset the game
 sub reset( $self ) {
     $self->gamestate->clear;
+    # TODO: reset player
 }
 
 sub new_game( $self, $adventure ) {

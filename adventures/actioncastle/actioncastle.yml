@@ -271,6 +271,6 @@ items:
 player:
     inventory:
         unlitlamp : 1,
-    startlocation: cottage
+    start_location: cottage
     properties:
         royalty : 0

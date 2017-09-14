@@ -42,4 +42,5 @@ Tests:
 Player: 
 - Part of game, not mission
 
-Add base object with name, description, looks, properties, save(), load()
+Add base object with name, description, looks, properties, save(), load() (DONE)
+Slugs should be needed for creating new Things
