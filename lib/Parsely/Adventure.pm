@@ -4,13 +4,8 @@ use Moo;
 use MooX::Types::MooseLike::Base qw/:all/;
 use YAML 'LoadFile';
 
-use v5.24;
-use strictures 2;
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-
 use lib '.';
-#use Parsely::Base;
+use Parsely::Base;
 use Parsely::Location;
 use Data::Dumper;
 

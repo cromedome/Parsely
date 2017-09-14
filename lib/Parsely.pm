@@ -2,14 +2,9 @@ package Parsely;
 
 use lib '.';
 use Moo;
-use v5.24;
-use strictures 2;
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-
 use Cache::FastMmap;
 
-#use Parsely::Base;
+use Parsely::Base;
 use Parsely::Adventure;
 use Parsely::Player;
 

@@ -4,11 +4,7 @@ use lib '.';
 use Moo;
 use Types::Standard -all;
 use YAML 'LoadFile';
-use v5.24;
-use strictures 2;
-use feature qw(signatures);
-no warnings qw(experimental::signatures);
-#use Parsely::Base;
+use Parsely::Base;
 
 extends 'Parsely::Thing';
 

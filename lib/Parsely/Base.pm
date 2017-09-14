@@ -1,11 +1,11 @@
 package Parsely::Base;
 
 use strictures 2;
+use base 'Import::Base';
 
 our @IMPORT_MODULES = (
-    'v5.24',
     { 'strictures' => 2 },
-    feature => [qw( signatures )],
+    feature => [qw( :5.24 signatures )],
     '>-warnings' => [qw( experimental::signatures )],
     'Try::Tiny',
 );
