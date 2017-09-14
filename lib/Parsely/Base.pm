@@ -8,6 +8,7 @@ our @IMPORT_MODULES = (
     feature => [qw( :5.24 signatures )],
     '>-warnings' => [qw( experimental::signatures )],
     'Try::Tiny',
+    'Carp',
 );
 
 1;
