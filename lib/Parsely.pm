@@ -23,8 +23,6 @@ has adventure => (
     builder => '_build_adventure',
 );
 
-# TODO: save() (call adventure->name)
-
 # Create a new in-memory cache for tracking game state
 sub _build_gamestate( $self ) {
     my $cache = Cache::FastMmap->new;
