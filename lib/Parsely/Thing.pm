@@ -2,7 +2,7 @@ package Parsely::Thing;
 
 use lib '.';
 use Moo;
-use MooX::Types::MooseLike::Base qw/:all/;
+use Types::Standard -all;
 use v5.24;
 use strictures 2;
 use feature qw(signatures);

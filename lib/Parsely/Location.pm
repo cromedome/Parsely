@@ -2,7 +2,7 @@ package Parsely::Location;
 
 use lib '.';
 use Moo;
-use MooX::Types::MooseLike::Base qw/:all/;
+use Types::Standard -all;
 use YAML 'LoadFile';
 use v5.24;
 use strictures 2;
