@@ -1,6 +1,6 @@
 # Parsely - A Parsely RPG Client in Perl!
 
-This implements the pen-and-paper RPG game (Parsely)[http://www.memento-mori.com/parsely/] 
+This implements the pen-and-paper RPG game [Parsely](http://www.memento-mori.com/parsely/) 
 in Perl.
 
 This is created for illustration purposes only, and should not be used to 
