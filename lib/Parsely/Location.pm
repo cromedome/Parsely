@@ -10,30 +10,11 @@ use feature qw(signatures);
 no warnings qw(experimental::signatures);
 #use Parsely::Base;
 
-has slug => (
-    is  => 'rw',
-    isa => Str,
-);
-
-has name => (
-    is  => 'rw',
-    isa => Str,
-);
+extends 'Parsely::Thing';
 
 has initial_description => (
     is  => 'rw',
     isa => Str,
-);
-
-has description => (
-    is  => 'rw',
-    isa => Str,
-);
-
-has visited => (
-    is      => 'rw',
-    isa     => Bool,
-    default => 0,
 );
 
 has actors => (
@@ -52,17 +33,7 @@ has exits => (
     isa => HashRef,
 );
 
-has looks => (
-    is  => 'rw',
-    isa => HashRef,
-);
-
 has actions => (
-    is  => 'rw',
-    isa => HashRef,
-);
-
-has properties => (
     is  => 'rw',
     isa => HashRef,
 );
