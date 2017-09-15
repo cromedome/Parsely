@@ -63,6 +63,18 @@ sub load( $self, $gamestate, $slug ) {
     $self->properties( $props );
 }
 
+sub set_property( $self, $key, $value ) {
+    my $props = $self->properties;
+    $props->{ $key } = $value;
+    $self->properties( $props );
+}
+
+sub get_property( $self, $key ) {
+    my $props = $self->properties;
+    return $props->{ $key } // undef;
+}
+
+
 sub _stringify( $self, $thingy ) {
     die "Nothing to stringify!" unless $thingy;
     return join ',', map{ $_ . ':' . $thingy->{ $_ } } keys %$thingy;

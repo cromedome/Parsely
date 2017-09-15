@@ -32,6 +32,11 @@ ok( $description eq $thing->description, "...and with the right description" );
 cmp_deeply( \%looks, $thing->looks, "...and all the same looks" );
 cmp_deeply( \%props, $thing->properties, "...and the same properties too" );
 
+# Set/get_property
+ok( !defined $thing->get_property( 'jason' ), "Key 'jason' doesn't exist yet" );
+$thing->set_property( 'jason', 'cromedome' );
+ok( $thing->get_property( 'jason' ) eq 'cromedome', "...but now it does!" );
+
 # Stringification
 like( $thing->_stringify( $thing->properties ), qr/this:that/,
     "Properties were properly stringified");
