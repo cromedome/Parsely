@@ -22,7 +22,7 @@ locations:
     ## game state always passed to roles
     fishpond:
         name: Fishing Pond
-        #initial description : You are at the edge of a small fishing pond.
+        initial_description : You are at the edge of a small fishing pond.
         description : You are at the edge of a small fishing pond.
         exits :
             North : gardenpath
@@ -141,16 +141,16 @@ actor:
     ghost:
         name: Spooky Ghost
         description: The ghost has bony, claw-like fingers, and wears a crown.
-        action :
-            use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
+        #action :
+            #use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
     sadprincess:
         name: Princess
         description: The princess is beautiful, sad, and lonely. She awates her prince.
         talk :
             generic: She looks sad, but says nothing.
-        actions :
-            kiss: She slaps you.
-            give rose : takes it and smiles, transform into happyprincess
+        #actions :
+            #kiss: She slaps you.
+            #give rose : takes it and smiles, transform into happyprincess
     #happyprincess:
         #name: Princess
         #description: The princess is beautiful, happy, but lonely. She awates her prince.
@@ -225,30 +225,30 @@ items:
     candle :
         name : Strange Candle
         description : The candle is covered in strange runes.
-        actions:
-            read : The runes seem to be a spell of exorcism.
-    #crown:
-        #name : Crown
-        #description: A golden crown fit for royalty.
+        #actions:
+            #read : The runes seem to be a spell of exorcism.
+    crown:
+        name : Crown
+        description: A golden crown fit for royalty.
         #actions:
             #wear: You wouldn't feel right wearing this crown since you are not royalty.
 
-    #key:
-        #name : Key
-        #description: A small gold key.
+    key:
+        name : Key
+        description: A small gold key.
         #actions:
             #unlock tower door : ok
-    #fish:
-        #name: Fish
-        #description: You have a fish. It is raw.
+    fish:
+        name: Fish
+        description: You have a fish. It is raw.
         #actions:
             #eat :
                 #description: You can't eat it. It is raw.
             #smell :
                 #description: It smells fishy.
-    #fishpole:
-        #name: Fishing Pole
-        #description: A simple fishing pole.
+    fishpole:
+        name: Fishing Pole
+        description: A simple fishing pole.
     #branch:
         #name: Branch
         #description: It is stout and dead.

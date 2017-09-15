@@ -11,6 +11,11 @@ use Parsely::Location;
 
 extends 'Parsely::Thing';
 
+has actors => (
+    is  => 'rw',
+    isa => ArrayRef[ InstanceOf[ "Parsely::Actor" ]],
+);
+
 has locations => (
     is  => 'rw',
     isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
@@ -21,7 +26,6 @@ has _slugs => (
     isa     => HashRef,
     default => sub{ {} },
 );
-#my %_slug_check;
 
 sub get_location( $self, $location ) {
     croak "No location specified to get_location()" unless $location;
@@ -51,6 +55,7 @@ sub new_game( $self, $adventure ) {
             $self->slug( $adventure );
             $self->name( $config->{ name } );
             $self->_ng_locations( $config );
+            $self->_ng_actors( $config );
         }
     }
     else {
@@ -69,6 +74,7 @@ sub validate( $self, $config ) {
     
     my $valid = 1;
     $valid = $self->_validate_locations( $config );
+    $valid = $self->_validate_actors   ( $config );
 
     return $valid;
 }
@@ -84,13 +90,34 @@ sub _check_slug( $self, $slug, $what ) {
     }
 }
 
+sub _validate_actors( $self, $config ) {
+    croak "No adventure configuration in _validate_actors()" unless $config;
+
+    my $valid = 1;
+    my @actors = keys %{ $config->{ actors }};
+    if( @actors == 0 ) {
+        warn "No actors defined in game config!";
+    }
+    else {
+        foreach my $actor( @actors ) {
+            my $actor_info = $config->{ actors }->{ $actor };
+            my $message  = "Actor '$actor' has no ";
+            warn "$message name!"        unless $actor_info->{ name };
+            warn "$message description!" unless $actor_info->{ description };
+            $valid = 0 if $message =~ /name|description/;
+        }
+    }
+
+    return $valid;
+}
+
 sub _validate_locations( $self, $config ) {
-    croak "No adventure configuration!" unless $config;
+    croak "No adventure configuration in _validate_locations()" unless $config;
 
     my $valid = 1;
     my @locations = keys %{ $config->{ locations }};
     if( @locations == 0 ) {
-        warn "No locations defined!";
+        warn "No locations defined in game config!";
     }
     else {
         foreach my $location( @locations ) {
@@ -106,10 +133,35 @@ sub _validate_locations( $self, $config ) {
     return $valid;
 }
 
-# TODO: Validate actors
 # TODO: Validate items
 # TODO: Validate exits
+# TODO: Validate talk (generic - anything you say)
 # TODO: Validate game over conditions
+
+sub _ng_actors( $self, $config ) {
+    die "No adventure configuration in _ng_actors()" unless $config;
+
+    my @actors;
+    for my $actor( keys %{ $config->{ actors }}) {
+        $self->_check_slug( $actor, 'actor' );
+
+        my $actor_info = $config->{ actors }->{ $actor };
+        my $thing      = Parsely::Actor->new({ slug => $actor });
+
+        $thing->description( $actor_info->{ description } );
+        $thing->name( $actor_info->{ name } );
+
+        $thing->items     ( $actor_info->{ items  }     // [] );
+        $thing->actors    ( $actor_info->{ actors }     // [] );
+        $thing->looks     ( $actor_info->{ looks }      // {} );
+        $thing->properties( $actor_info->{ properties } // {} );
+        # TODO: actions!
+
+        push @actors, $thing;
+    }
+
+    $self->actors( \@actors );
+}
 
 sub _ng_locations( $self, $config ) {
     die "No adventure configuration in _ng_locations()" unless $config;
