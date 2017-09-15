@@ -4,7 +4,7 @@ use Test::Most;
 use Cache::FastMmap;
 use Parsely::Adventure;
 
-my $adventure = Parsely::Adventure->new;
+my $adventure = Parsely::Adventure->new( slug => 'new' );
 my $gamestate = Cache::FastMmap->new;
 
 # Start a new game

@@ -34,7 +34,7 @@ sub _build_gamestate( $self ) {
 }
 
 sub _build_adventure( $self ) {
-    my $adventure = Parsely::Adventure->new;
+    my $adventure = Parsely::Adventure->new({ slug => 'new' });
     return $adventure;
 }
 

@@ -1,29 +1,23 @@
 package Parsely::Adventure;
 
 use Moo;
-use MooX::Types::MooseLike::Base qw/:all/;
+use Types::Standard -all;
+#use MooX::Types::MooseLike::Base qw/:all/;
 use YAML 'LoadFile';
 
 use lib '.';
 use Parsely::Base;
+use Parsely::Thing;
 use Parsely::Location;
 
-has slug => (
-    is  => 'rw',
-    isa => Str,
-);
-
-has name => (
-    is  => 'rw',
-    isa => Str,
-);
+extends 'Parsely::Thing';
 
 has locations => (
     is  => 'rw',
     isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
 );
 
-sub get_location( $self,  $location ) {
+sub get_location( $self, $location ) {
     croak "No location specified to get_location()" unless $location;
 
     for my $loc( @{ $self->locations } ) {
@@ -61,6 +55,7 @@ sub new_game( $self, $adventure ) {
 
 sub save( $self, $gamestate ) {
     $_->save( $gamestate ) foreach @{ $self->locations };
+    $self->SUPER::save( $gamestate );
 }
 
 sub validate( $self, $config ) {

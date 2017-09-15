@@ -34,7 +34,7 @@ has properties => (
 sub save( $self, $gamestate ) {
     die "No gamestate provided!" unless $gamestate;
 
-    $gamestate->set( $self->slug . "|properties",  $self->_stringify( $self->properties ));
+    $gamestate->set( $self->slug . "|properties",  $self->_stringify( $self->properties // {} ));
 }
 
 sub load( $self, $gamestate, $slug ) {
