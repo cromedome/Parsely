@@ -23,11 +23,13 @@ has locations => (
     isa => ArrayRef,
 );
 
-# Load a new adventure
-# TODO: require slug in new, then call this automatically? Rename to new_game?
-# TODO: load() restores game state?
-sub load( $self, $adventure ) {
-    die "No adventure provided!" unless $adventure;
+sub load( $self, $gamestate, $adventure ) {
+    return 1;
+}
+
+# Start a new game by loading a fresh adventure
+sub new_game( $self, $adventure ) {
+    croak "No adventure provided to new_game()" unless $adventure;
     # TODO: hash to check for duplicate objects
 
     my $file = "./adventures/$adventure/${ adventure }.yml";
@@ -37,7 +39,7 @@ sub load( $self, $adventure ) {
             # Everything is valid at this point, add with impunity
             $self->slug( $adventure );
             $self->name( $config->{ name } );
-            $self->_load_locations( $config );
+            $self->_ng_locations( $config );
         }
     }
     else {
@@ -47,7 +49,7 @@ sub load( $self, $adventure ) {
 }
 
 sub validate( $self, $config ) {
-    die "No adventure configuration!" unless $config;
+    croak "No adventure configuration in validate()" unless $config;
     
     my $valid = 1;
     $valid = $self->_validate_locations( $config );
@@ -82,8 +84,8 @@ sub _validate_locations( $self, $config ) {
     return $valid;
 }
 
-sub _load_locations( $self, $config ) {
-    die "No adventure configuration!" unless $config;
+sub _ng_locations( $self, $config ) {
+    die "No adventure configuration in _ng_locations()" unless $config;
 
     for my $location( keys %{ $config->{ locations }}) {
         my $loc_info = $config->{ locations }->{ $location };

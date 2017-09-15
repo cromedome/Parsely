@@ -54,7 +54,7 @@ sub new_game( $self, $adventure ) {
     croak "No game specified to new_game()" unless $adventure;
 
     $self->reset;
-    $self->adventure->load( $adventure );
+    $self->adventure->new_game( $adventure );
     return $self->start_game;
 }
 
@@ -67,7 +67,7 @@ sub load( $self, $adventure ) {
     croak "Save game '$file' doesn't exist; can't load()" unless -e $file;
     my $config = LoadFile( $file );
     $self->gamestate->set( $_, $config->{ $_ }) foreach keys %$config;
-    $self->adventure->load( $adventure );
+    $self->adventure->new_game( $adventure );
     # TODO: set adventure objects from YAML
     
     return 1;
