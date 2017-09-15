@@ -49,7 +49,7 @@ $thing->save( $gamestate );
 ok( $gamestate->get( "$slug|name" ) eq $name, "Thing was saved to gamestate successfully" );
 
 # Load
-my $thing1 = Parsely::Thing->new;
+my $thing1 = Parsely::Thing->new( slug => "new" );
 $thing1->load( $gamestate, $slug );
 ok( $thing->description eq $thing1->description, "...and was successfully loaded to a new object" );
 

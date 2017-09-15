@@ -87,9 +87,8 @@ sub _load_locations( $self, $config ) {
 
     for my $location( keys %{ $config->{ locations }}) {
         my $loc_info = $config->{ locations }->{ $location };
-        my $room     = Parsely::Location->new;
+        my $room     = Parsely::Location->new({ slug => $location });
 
-        $room->slug( $location );
         $room->initial_description( 
             $loc_info->{ initial_description } // $loc_info->{ description } );
         $room->description( $loc_info->{ description } );

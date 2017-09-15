@@ -39,7 +39,7 @@ sub _build_adventure( $self ) {
 }
 
 sub _build_player( $self ) {
-    my $player = Parsely::Player->new;
+    my $player = Parsely::Player->new({ slug => "player" });
     return $player;
 }
 

@@ -6,8 +6,9 @@ use Types::Standard -all;
 use Parsely::Base;
 
 has slug => (
-    is  => 'rw',
-    isa => Str,
+    is       => 'rw',
+    isa      => Str,
+    required => 1,
 );
 
 has name => (
