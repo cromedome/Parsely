@@ -20,10 +20,21 @@ has name => (
 
 has locations => (
     is  => 'rw',
-    isa => ArrayRef,
+    isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
 );
 
+sub get_location( $self,  $location ) {
+    croak "No location specified to get_location()" unless $location;
+
+    for my $loc( @{ $self->locations } ) {
+        return $loc if $loc->slug eq $location;
+    }
+
+    die "Location '$location' not found by get_location() in " . $self->adventure->name;
+}
+
 sub load( $self, $gamestate, $adventure ) {
+    $_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
     return 1;
 }
 
@@ -48,6 +59,10 @@ sub new_game( $self, $adventure ) {
     return 1;
 }
 
+sub save( $self, $gamestate ) {
+    $_->save( $gamestate ) foreach @{ $self->locations };
+}
+
 sub validate( $self, $config ) {
     croak "No adventure configuration in validate()" unless $config;
     
@@ -56,11 +71,6 @@ sub validate( $self, $config ) {
 
     return $valid;
 }
-
-# TODO: Validate actors
-# TODO: Validate items
-# TODO: Validate exits
-# TODO: Validate game over conditions
 
 sub _validate_locations( $self, $config ) {
     die "No adventure configuration!" unless $config;
@@ -84,9 +94,15 @@ sub _validate_locations( $self, $config ) {
     return $valid;
 }
 
+# TODO: Validate actors
+# TODO: Validate items
+# TODO: Validate exits
+# TODO: Validate game over conditions
+
 sub _ng_locations( $self, $config ) {
     die "No adventure configuration in _ng_locations()" unless $config;
 
+    my @locations;
     for my $location( keys %{ $config->{ locations }}) {
         my $loc_info = $config->{ locations }->{ $location };
         my $room     = Parsely::Location->new({ slug => $location });
@@ -102,7 +118,11 @@ sub _ng_locations( $self, $config ) {
         $room->looks     ( $loc_info->{ looks }      // {} );
         $room->properties( $loc_info->{ properties } // {} );
         # TODO: actions!
+
+        push @locations, $room;
     }
+
+    $self->locations( \@locations );
 }
 
 1;

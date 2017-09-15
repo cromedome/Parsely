@@ -51,12 +51,14 @@ cmp_deeply( \%looks, $thing->_hashify($thing->_stringify( $thing->looks )),
 
 # Save
 $thing->save( $gamestate );
-ok( $gamestate->get( "$slug|name" ) eq $name, "Thing was saved to gamestate successfully" );
+ok( $gamestate->get( "$slug|properties" ) eq $thing->_stringify( $thing->properties ), 
+    "Thing was saved to gamestate successfully" );
 
 # Load
 my $thing1 = Parsely::Thing->new( slug => "new" );
 $thing1->load( $gamestate, $slug );
-ok( $thing->description eq $thing1->description, "...and was successfully loaded to a new object" );
+cmp_deeply( $thing->properties, $thing1->properties, 
+    "...and was successfully loaded to a new object" );
 
 # Exceptions
 throws_ok{ $thing->save( undef ) }
@@ -70,10 +72,6 @@ throws_ok{ $thing->load( undef, undef ) }
 throws_ok{ $thing->load( $gamestate, undef ) }
     qr/No slug provided/,
     "load() also dies when not given a slug to load";
-
-throws_ok{ $thing->load( $gamestate, "foo" ) }
-    qr/No name for/,
-    "...or when the thing you're loading has no name";
 
 throws_ok{ $thing->_stringify( undef ) }
     qr/Nothing to stringify/,

@@ -68,7 +68,7 @@ sub load( $self, $adventure ) {
     my $config = LoadFile( $file );
     $self->gamestate->set( $_, $config->{ $_ }) foreach keys %$config;
     $self->adventure->new_game( $adventure );
-    # TODO: set adventure objects from YAML
+    $self->adventure->load( $self->gamestate, $adventure );
     
     return 1;
 }
@@ -76,6 +76,10 @@ sub load( $self, $adventure ) {
 sub save( $self ) {
     die "No game in progress" unless $self->adventure->name;
 
+    # Capture gamestate
+    $self->adventure->save( $self->gamestate );
+
+    # Write gamestate to savefile
     my @game_vars = $self->gamestate->get_keys( 2 );
     my %game_data;
     $game_data{ $_->{ key } } = $self->gamestate->get( $_->{ key } ) foreach @game_vars;

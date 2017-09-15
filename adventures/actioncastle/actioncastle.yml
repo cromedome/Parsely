@@ -22,7 +22,7 @@ locations:
     ## game state always passed to roles
     fishpond:
         name: Fishing Pond
-        initial description : You are at the edge of a small fishing pond.
+        #initial description : You are at the edge of a small fishing pond.
         description : You are at the edge of a small fishing pond.
         exits :
             North : gardenpath
@@ -31,14 +31,14 @@ locations:
             pond : You see fish in the pond!
         properties:
             caught_fish: 0
-        actions :
-            fish :
-                description: You catch a fish.
-                todo: can only catch one fish
-                aliases :
-                    - catch fish
-                    - use fishing pole
-                    - go fishing
+        #actions :
+            #fish :
+                #description: You catch a fish.
+                #todo: can only catch one fish
+                #aliases :
+                    #- catch fish
+                    #- use fishing pole
+                    #- go fishing
     #windingpath:
         #name: Winding Path
         #description : You are walking along a winding path. 
