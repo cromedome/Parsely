@@ -2,7 +2,6 @@ package Parsely::Adventure;
 
 use Moo;
 use Types::Standard -all;
-#use MooX::Types::MooseLike::Base qw/:all/;
 use YAML 'LoadFile';
 
 use lib '.';
@@ -16,6 +15,13 @@ has locations => (
     is  => 'rw',
     isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
 );
+
+has _slugs => (
+    is      => 'rw',
+    isa     => HashRef,
+    default => sub{ {} },
+);
+#my %_slug_check;
 
 sub get_location( $self, $location ) {
     croak "No location specified to get_location()" unless $location;
@@ -35,13 +41,13 @@ sub load( $self, $gamestate, $adventure ) {
 # Start a new game by loading a fresh adventure
 sub new_game( $self, $adventure ) {
     croak "No adventure provided to new_game()" unless $adventure;
-    # TODO: hash to check for duplicate objects
 
     my $file = "./adventures/$adventure/${ adventure }.yml";
     if( -e $file ) {
         my $config = LoadFile( $file );
         if( $config and $self->validate( $config )) {
             # Everything is valid at this point, add with impunity
+            $self->_check_slug( $adventure, 'adventure' );
             $self->slug( $adventure );
             $self->name( $config->{ name } );
             $self->_ng_locations( $config );
@@ -67,8 +73,19 @@ sub validate( $self, $config ) {
     return $valid;
 }
 
+sub _check_slug( $self, $slug, $what ) {
+    my $slugs = $self->_slugs;
+    if( exists $slugs->{ $slug } ) {
+        croak "Duplicate slug in adventure: '$slug' ($what)";
+    }
+    else {
+        $slugs->{ $slug } = 1;
+        $self->_slugs( $slugs );
+    }
+}
+
 sub _validate_locations( $self, $config ) {
-    die "No adventure configuration!" unless $config;
+    croak "No adventure configuration!" unless $config;
 
     my $valid = 1;
     my @locations = keys %{ $config->{ locations }};
@@ -99,6 +116,8 @@ sub _ng_locations( $self, $config ) {
 
     my @locations;
     for my $location( keys %{ $config->{ locations }}) {
+        $self->_check_slug( $location, 'location' );
+
         my $loc_info = $config->{ locations }->{ $location };
         my $room     = Parsely::Location->new({ slug => $location });
 
