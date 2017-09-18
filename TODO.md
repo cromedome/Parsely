@@ -6,7 +6,7 @@ Missions can have their own roles
 See notes in actioncastle.yaml
 
 Missions or area descriptions as YAML
-Immutable objects
+Immutable objects. Config easier than code!
 Actors: items, characters, NPCs, etc.
 
 Separate namespace for game plugins/modules? Can distribute code and config file in one structure.
@@ -20,7 +20,7 @@ missions/actioncastle, etc.: mission data (DONE)
 missions/actioncastle/roles: custom roles
 saves/ - one YAML file per saved game. YAML is name of saved game. (DONE)
 
-Mission->load(), save(), validate(), etc.
+Mission->load(), save(), validate(), etc. (DONE)
 
 Goals:
 - Easy for non-techies to make content for
@@ -31,6 +31,7 @@ Goals:
 Expansion ideas:
 - Multiplayer? (multiple people playing single-player games)
 - Chat?
+- Multiple things per location
 
 Add docs for mission building.
 
@@ -45,3 +46,5 @@ Player:
 Add base object with name, description, looks, properties, save(), load() (DONE)
 Slugs should be needed for creating new Things (DONE)
 gamestate should be sent to all game actions
+
+move = run = walk = go

@@ -112,7 +112,7 @@ sub _validate_actors( $self, $config ) {
     else {
         foreach my $actor( @actors ) {
             my $actor_info = $config->{ actors }->{ $actor };
-            my $message  = "Actor '$actor' has no ";
+            my $message  = "Actor '$actor' has no";
             warn "$message name!"        unless $actor_info->{ name };
             warn "$message description!" unless $actor_info->{ description };
             $valid = 0 if $message =~ /name|description/;
@@ -133,7 +133,7 @@ sub _validate_items( $self, $config ) {
     else {
         foreach my $item( @items ) {
             my $item_info = $config->{ items }->{ $item };
-            my $message  = "Item '$item' has no ";
+            my $message  = "Item '$item' has no";
             warn "$message name!"        unless $item_info->{ name };
             warn "$message description!" unless $item_info->{ description };
             $valid = 0 if $message =~ /name|description/;
@@ -154,7 +154,7 @@ sub _validate_locations( $self, $config ) {
     else {
         foreach my $location( @locations ) {
             my $loc_info = $config->{ locations }->{ $location };
-            my $message  = "Location '$location' has no ";
+            my $message  = "Location '$location' has no";
             warn "$message name!"        unless $loc_info->{ name };
             warn "$message exits!"       unless $loc_info->{ exits };
             warn "$message description!" unless $loc_info->{ description };
@@ -166,6 +166,8 @@ sub _validate_locations( $self, $config ) {
 }
 
 # TODO: Validate exits
+# TODO: Validate items in locations
+# TODO: Validate actors in locations
 # TODO: Validate game over conditions
 # TODO: Validate talk (generic - anything you say)
 

@@ -1,136 +1,129 @@
 ---
-# Immutable objects - easier to write config than code!
 name: Action Castle
+greeting: "Welcome to Action Castle!"
 locations:
     cottage:
         name: Cottage
-        description : You are standing in a small cottage.
-        items : 
+        description: You are standing in a small cottage.
+        items: 
             - fishpole
-        exits :
-            Out : gardenpath
+        exits:
+            out: gardenpath
     gardenpath:
         name: Garden Path
-        description : You are standing on a lush garden path.
-        exits :
-            South : fishpond
-            North : windingpath
-            In : cottage
-        actors :
+        description: You are standing on a lush garden path. A cottage lies next to the path.
+        exits:
+            south: fishpond
+            north: windingpath
+            in: cottage
+        actors:
             - bush
-    ## locations can have properties...
-    ## game state always passed to roles
     fishpond:
         name: Fishing Pond
-        initial_description : You are at the edge of a small fishing pond.
-        description : You are at the edge of a small fishing pond.
-        exits :
-            North : gardenpath
-        # look: for anything you can look at that isn't an item or an actor.
-        looks :
-            pond : You see fish in the pond!
+        description: You are at the edge of a small fishing pond.
+        exits:
+            north: gardenpath
+        looks:
+            pond: You see fish in the pond!
         properties:
             caught_fish: 0
-        #actions :
-            #fish :
-                #description: You catch a fish.
-                #todo: can only catch one fish
-                #aliases :
-                    #- catch fish
-                    #- use fishing pole
-                    #- go fishing
-    #windingpath:
-        #name: Winding Path
-        #description : You are walking along a winding path. 
-        #exits :
-            #South : gardenpath
-            #East : bridge
-            #Up : tree
-        #look:
-            #tree : The tree is very tall with many branches.
-    #tree:
-        #name: Top of the Tall Tree
-        #description : You are at the top of the tall tree.
-        #exits :
-            #Down : windingpath
-        #look:
-            #tree : The tree is very tall with many branches.
-        #items:
-            #branch : 1,
-        #actions:
-            #jump :
-                ## Jump twice = suicide ;)
-                #description : Jumping would be suicide from this height.
-    #bridge:
-        #name: Draw Bridge
-        #description : You are standing on one side of a drawbridge leading to Action Castle.
-        #exits :
-            #West : windingpath
-            #East : courtyard # blocked, think it probably should be dynamically added later when you defeat the troll
-        #actors:
-            #troll
-    #courtyard:
-        #name: Courtyard
-        #initial description : You are standing in the courtyard of Action Castle. There is a guard here, blocking the path east.
-        #description : You are standing on one side of a drawbridge leading to Action Castle.
-        #exits :
-            #West : bridge
-            #East : hall # blocked, think it probably should be dynamically added later when you defeat the troll
-            #Up : towerstairs
-            #Down : dungeonstairs
-        #actors:
-            #guard
-    #towerstairs:
-        #name: Tower Stairs
-        #initial description : You are climbing the stairs to the tower. There is a locked door here.
-        #description : You are climbing the stairs to the tower. There is a locked door here.
-        #exits :
-            #Down : courtyard
-            #Up : tower # blocked by locked door
-        #actors:
-            #door
-    #tower:
-        #name: Tower
-        #initial description : You are inside a tower. The princess is here.
-        #description : You are inside a tower. The princess is here.
-        #exits :
-            #Down : towerstairs
-        #actors:
-            #sadprincess
-    #dugneonstairs:
-        #name: Dungeon Stairs
-        #initial description : Your are climbing the stairs down to the dungeon, it is too dark to see!
-        #description : Your are climbing the stairs down to the dungeon!
-        #look:
-            #darkness : It is too dark to see.
-        #aliases :
-            #room : darkness
-            #around : darkness
-        #exits :
-            #Up : courtyard
-            #Down : dungeon # blocked by darkness
-    #dungeon:
-        #name: Dungeon
-        #initial description : You are in the dungeon. There is a spooky ghost here.
-        #description : You are in the dungeon.
-        #exits :
-            #Down : towerstairs
-        #actors:
-            #ghost
-    #hall:
-        #name: Great Feasting Hall
-        #initial description : You stand inside the Great Feating Hall. There is a strange candle here.
-        #description : You stand inside the Great Feating Hall.
-        #exits :
-            #West : courtyard
-            #East : throne
-        #items:
-            #candle : 1
-    #throne:
-        #name : Throne Room
-        #description: This is the throne room of Action Castle. There is an ornate golden throne here.
-        #actors:
-            #throne : 1
+        actions:
+            fish:
+                result: You catch a fish!
+                inventory:
+                    fish: add
+                aliases:
+                    - catch fish
+                    - use fishing pole
+                    - go fishing
+    windingpath:
+        name: Winding Path
+        description: You are walking along a winding path. There is a tall tree here.
+        exits:
+            south: gardenpath
+            east: bridge
+            up: tree
+        looks:
+            tree: The tree is very tall with many branches.
+    tree:
+        name: Top of the Tall Tree
+        description: You are at the top of the tall tree.
+        exits:
+            down: windingpath
+        looks:
+            tree: The tree is very tall with many branches.
+        items:
+            - branch
+        actions:
+            jump:
+                result: Jumping would be suicide from this height.
+    bridge:
+        name: Draw Bridge
+        description: You are standing on one side of a drawbridge leading to Action Castle.
+        exits:
+            west: windingpath
+            east: courtyard 
+        actors:
+            - troll
+    courtyard:
+        name: Courtyard
+        initial_description: You are standing in the courtyard of Action Castle. There is a guard here, blocking the path east.
+        description: You are standing in the courtyard of Action Castle.
+        exits:
+            west: bridge
+            east: hall
+            up: towerstairs
+            down: dungeonstairs
+        actors:
+            - guard
+    towerstairs:
+        name: Tower Stairs
+        initial_description: You are climbing the stairs to the tower. There is a locked door here.
+        description: You are climbing the stairs to the tower.
+        exits:
+            down: courtyard
+            up: tower # blocked by locked door
+        actors:
+            - door
+    tower:
+        name: Tower
+        initial_description: You are inside a tower. The princess is here.
+        description: You are inside a tower.
+        exits:
+            down: towerstairs
+        actors:
+            - sadprincess
+    dungeonstairs:
+        name: Dungeon Stairs
+        initial_description: You are climbing the stairs down to the dungeon, it is too dark to see!
+        description: Your are climbing the stairs down to the dungeon!
+        looks:
+            darkness: It is too dark to see.
+        exits:
+            up: courtyard
+            down: dungeon # blocked by darkness
+    dungeon:
+        name: Dungeon
+        initial_description: You are in the dungeon. There is a spooky ghost here.
+        description: You are in the dungeon.
+        exits:
+            down: towerstairs
+        actors:
+            - ghost
+    hall:
+        name: Great Feasting Hall
+        initial_description: You stand inside the Great Feasting Hall. There is a strange candle here.
+        description: You stand inside the Great Feasting Hall.
+        exits:
+            west: courtyard
+            east: throne
+        items:
+            - candle
+    throne:
+        name : Throne Room
+        description: This is the throne room of Action Castle. There is an ornate golden throne here.
+        actors:
+            - throne
 actors:
     #throne:
         #name : Throne
@@ -181,16 +174,24 @@ actors:
             #kick : that hurts
             #open : how?
             #open with key : remove door from towerstairs description, remove key, add up exit to tower stairs
-    #guard:
-        #name: Guard
-        #description: The guard is brandishing his short sword.
-        #actions :
-            #fight :
-                #description: The guard beats you to death.
-                #aliases:
-                    #attack
-                    #punch
-            #hit with branch : remove branch, switch to ko guard, add east exit to courtyard
+    guard:
+        name: Guard
+        description: The guard is brandishing his short sword.
+        blocks: east
+        actions:
+            fight guard:
+                result: The guard beats you to death.
+                game_over: 1
+                aliases:
+                    - attack guard
+                    - punch guard
+            hit with branch: 
+                result: You knock the guard out with the branch. The branch breaks.
+                inventory:
+                    branch: remove
+                properties:
+                    ko: 1
+                unblocks: east
     #koguard :
         #name : Incapacitated Guard
         #description : The guard has been knocked out.
@@ -210,17 +211,24 @@ actors:
         ## Not necessary if the alias matches the identifier or the name
         #aliases :
             #rosebush
-    #troll:
-        #name: Troll
-        #description: A mean looking troll.
-        #actions :
-            #fight :
-                #description: The troll beats you to death.
-                #aliases:
-                    #attack
-                    #punch
-            #give fish : if you give him the fish add the east exit to the bridge
-            #hit with branch : if you try to hit him see "fight" above
+    troll:
+        name: Troll
+        description: A mean looking troll.
+        blocks: courtyard
+        actions:
+            fight:
+                game_over: 1
+                result: The troll beats you to death.
+                aliases:
+                    - attack troll
+                    - punch troll
+                    - hit troll
+                    - hit troll with branch
+            give fish to troll: 
+                result: if you give him the fish add the east exit to the bridge
+                unblocks: courtyard
+                aliases:
+                    - feed fish to troll
 items:
     candle :
         name : Strange Candle
@@ -252,16 +260,17 @@ items:
     #branch:
         #name: Branch
         #description: It is stout and dead.
-    #unlitlamp:
-        #name : Lamp
-        #description: A small lamp. It is unlit.
-        #actions:
-            #light:
-                #description: Lamp is now lit!
-                #notes: add down exit to dungeon stairs, transform to "lamp"
-    #lamp:
-        #name : Lamp
-        #description: A small lamp. It is lit.
+    lamp:
+        name: Lamp
+        description: A small lamp. It is unlit.
+        properties: 
+            lit: 0
+        actions:
+            light:
+                result: Lamp is now lit!
+                description: A small lamp. It is lit.
+                properties:
+                    lit: 1
     #rose:
         #name : Red Rose
         #description : A beautiful red rose.
@@ -270,7 +279,8 @@ items:
                 #description: It smells good.
 player:
     inventory:
-        unlitlamp : 1,
+        lamp: 1
     start_location: cottage
+    current_location: cottage
     properties:
-        royalty : 0
+        royalty: 0
