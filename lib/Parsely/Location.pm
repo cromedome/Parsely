@@ -29,10 +29,5 @@ has exits => (
     isa => HashRef,
 );
 
-has actions => (
-    is  => 'rw',
-    isa => HashRef,
-);
-
 1;
 

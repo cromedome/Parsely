@@ -31,6 +31,11 @@ has properties => (
     isa => HashRef,
 );
 
+has actions => (
+    is  => 'rw',
+    isa => HashRef,
+);
+
 sub save( $self, $gamestate ) {
     die "No gamestate provided!" unless $gamestate;
 
@@ -56,7 +61,6 @@ sub get_property( $self, $key ) {
     my $props = $self->properties;
     return $props->{ $key } // undef;
 }
-
 
 sub _stringify( $self, $thingy ) {
     die "Nothing to stringify!" unless defined $thingy;

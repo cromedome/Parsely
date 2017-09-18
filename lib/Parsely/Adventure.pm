@@ -166,8 +166,8 @@ sub _validate_locations( $self, $config ) {
 }
 
 # TODO: Validate exits
-# TODO: Validate talk (generic - anything you say)
 # TODO: Validate game over conditions
+# TODO: Validate talk (generic - anything you say)
 
 sub _ng_actors( $self, $config ) {
     die "No adventure configuration in _ng_actors()" unless $config;
