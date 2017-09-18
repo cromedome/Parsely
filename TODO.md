@@ -12,13 +12,13 @@ Actors: items, characters, NPCs, etc.
 Separate namespace for game plugins/modules? Can distribute code and config file in one structure.
 Game actions live in existing namespace
 
-Parsely.pm - Game engine
-Parsely/Item, Actor, Location, etc: Objects that represent in game things
-Parsely/Role/Item, Actor, etc: Implements items in game engine. Use is one, etc.
-Parsely/Mission: a mission. has a YAML config file
-missions/actioncastle, etc.: mission data
+Parsely.pm - Game engine (DONE)
+Parsely/Item, Actor, Location, etc: Objects that represent in game things (DONE)
+Parsely/Role/Item, Actor, etc: Implements items in game engine. Use is one, etc. (DONE)
+Parsely/Mission: a mission. has a YAML config file (DONE)
+missions/actioncastle, etc.: mission data (DONE)
 missions/actioncastle/roles: custom roles
-saves/ - one YAML file per saved game. YAML is name of saved game.
+saves/ - one YAML file per saved game. YAML is name of saved game. (DONE)
 
 Mission->load(), save(), validate(), etc.
 
@@ -43,4 +43,5 @@ Player:
 - Part of game, not mission
 
 Add base object with name, description, looks, properties, save(), load() (DONE)
-Slugs should be needed for creating new Things
+Slugs should be needed for creating new Things (DONE)
+gamestate should be sent to all game actions
