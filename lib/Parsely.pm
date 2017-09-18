@@ -25,8 +25,6 @@ has player => (
     builder => '_build_player',
 );
 
-# TODO: unsaved flag?
-
 # Create a new in-memory cache for tracking game state
 sub _build_gamestate( $self ) {
     my $cache = Cache::FastMmap->new;

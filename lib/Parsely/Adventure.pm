@@ -6,6 +6,7 @@ use YAML 'LoadFile';
 
 use lib '.';
 use Parsely::Base;
+use Parsely::Item;
 use Parsely::Actor;
 use Parsely::Thing;
 use Parsely::Location;
@@ -15,6 +16,11 @@ extends 'Parsely::Thing';
 has actors => (
     is  => 'rw',
     isa => ArrayRef[ InstanceOf[ "Parsely::Actor" ]],
+);
+
+has items => (
+    is  => 'rw',
+    isa => ArrayRef[ InstanceOf[ "Parsely::Item" ]],
 );
 
 has locations => (
@@ -57,6 +63,7 @@ sub new_game( $self, $adventure ) {
             $self->name( $config->{ name } );
             $self->_ng_locations( $config );
             $self->_ng_actors( $config );
+            $self->_ng_items( $config );
         }
     }
     else {
@@ -66,6 +73,8 @@ sub new_game( $self, $adventure ) {
 }
 
 sub save( $self, $gamestate ) {
+    $_->save( $gamestate ) foreach @{ $self->actors };
+    $_->save( $gamestate ) foreach @{ $self->items };
     $_->save( $gamestate ) foreach @{ $self->locations };
     $self->SUPER::save( $gamestate );
 }
@@ -76,6 +85,7 @@ sub validate( $self, $config ) {
     my $valid = 1;
     $valid = $self->_validate_locations( $config );
     $valid = $self->_validate_actors   ( $config );
+    $valid = $self->_validate_items    ( $config );
 
     return $valid;
 }
@@ -112,6 +122,27 @@ sub _validate_actors( $self, $config ) {
     return $valid;
 }
 
+sub _validate_items( $self, $config ) {
+    croak "No adventure configuration in _validate_items()" unless $config;
+
+    my $valid = 1;
+    my @items = keys %{ $config->{ items }};
+    if( @items == 0 ) {
+        warn "No items defined in game config!";
+    }
+    else {
+        foreach my $item( @items ) {
+            my $item_info = $config->{ items }->{ $item };
+            my $message  = "Item '$item' has no ";
+            warn "$message name!"        unless $item_info->{ name };
+            warn "$message description!" unless $item_info->{ description };
+            $valid = 0 if $message =~ /name|description/;
+        }
+    }
+
+    return $valid;
+}
+
 sub _validate_locations( $self, $config ) {
     croak "No adventure configuration in _validate_locations()" unless $config;
 
@@ -134,7 +165,6 @@ sub _validate_locations( $self, $config ) {
     return $valid;
 }
 
-# TODO: Validate items
 # TODO: Validate exits
 # TODO: Validate talk (generic - anything you say)
 # TODO: Validate game over conditions
@@ -153,12 +183,35 @@ sub _ng_actors( $self, $config ) {
         $thing->name       ( $actor_info->{ name } );
         $thing->looks      ( $actor_info->{ looks }      // {} );
         $thing->properties ( $actor_info->{ properties } // {} );
+        # TODO: Talk!
         # TODO: actions!
 
         push @actors, $thing;
     }
 
     $self->actors( \@actors );
+}
+
+sub _ng_items( $self, $config ) {
+    die "No adventure configuration in _ng_items()" unless $config;
+
+    my @items;
+    for my $item( keys %{ $config->{ items }}) {
+        $self->_check_slug( $item, 'item' );
+
+        my $item_info = $config->{ items }->{ $item };
+        my $thing     = Parsely::Item->new({ slug => $item });
+
+        $thing->description( $item_info->{ description } );
+        $thing->name       ( $item_info->{ name } );
+        $thing->looks      ( $item_info->{ looks }      // {} );
+        $thing->properties ( $item_info->{ properties } // {} );
+        # TODO: actions!
+
+        push @items, $thing;
+    }
+
+    $self->items( \@items );
 }
 
 sub _ng_locations( $self, $config ) {
