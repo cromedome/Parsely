@@ -6,6 +6,7 @@ use YAML 'LoadFile';
 
 use lib '.';
 use Parsely::Base;
+use Parsely::Actor;
 use Parsely::Thing;
 use Parsely::Location;
 
@@ -149,12 +150,9 @@ sub _ng_actors( $self, $config ) {
         my $thing      = Parsely::Actor->new({ slug => $actor });
 
         $thing->description( $actor_info->{ description } );
-        $thing->name( $actor_info->{ name } );
-
-        $thing->items     ( $actor_info->{ items  }     // [] );
-        $thing->actors    ( $actor_info->{ actors }     // [] );
-        $thing->looks     ( $actor_info->{ looks }      // {} );
-        $thing->properties( $actor_info->{ properties } // {} );
+        $thing->name       ( $actor_info->{ name } );
+        $thing->looks      ( $actor_info->{ looks }      // {} );
+        $thing->properties ( $actor_info->{ properties } // {} );
         # TODO: actions!
 
         push @actors, $thing;

@@ -131,7 +131,7 @@ locations:
         #description: This is the throne room of Action Castle. There is an ornate golden throne here.
         #actors:
             #throne : 1
-actor:
+actors:
     #throne:
         #name : Throne
         #description: An ornate golden throne.
