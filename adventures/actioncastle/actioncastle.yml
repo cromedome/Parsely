@@ -17,7 +17,7 @@ locations:
             north: windingpath
             in: cottage
         actors:
-            - bush
+            - rosebush
     fishpond:
         name: Fishing Pond
         description: You are at the edge of a small fishing pond.
@@ -82,7 +82,7 @@ locations:
         description: You are climbing the stairs to the tower.
         exits:
             down: courtyard
-            up: tower # blocked by locked door
+            up: tower 
         actors:
             - door
     tower:
@@ -92,7 +92,7 @@ locations:
         exits:
             down: towerstairs
         actors:
-            - sadprincess
+            - princess
     dungeonstairs:
         name: Dungeon Stairs
         initial_description: You are climbing the stairs down to the dungeon, it is too dark to see!
@@ -125,9 +125,9 @@ locations:
         actors:
             - throne
 actors:
-    #throne:
-        #name : Throne
-        #description: An ornate golden throne.
+    throne:
+        name: Throne
+        description: An ornate golden throne.
         #actions:
             #sit (not royal) : You think better of it since you are not royalty.
             #sit (royal) : You sit on the ornate golden throne. The people cheer for the new ruler of Action Castle! Game over.
@@ -136,23 +136,37 @@ actors:
         description: The ghost has bony, claw-like fingers, and wears a crown.
         #action :
             #use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
-    sadprincess:
+    princess:
         name: Princess
-        description: The princess is beautiful, sad, and lonely. She awates her prince.
-        talk :
-            generic: She looks sad, but says nothing.
-        #actions :
-            #kiss: She slaps you.
-            #give rose : takes it and smiles, transform into happyprincess
+        properties:
+            happy: 0
+            royalty: 0
+        check_property:
+            happy: 
+                is: 0
+                description: The princess is beautiful, sad, and lonely. She awaits her prince.
+                talk:
+                    generic: What would you like to talk about?
+                    ghost: My father haunts the dungeon as a restless spirit.
+                    crown: Only the rightful heir to the thrown may wear it.
+                    you: I cannot leave this tower until I am married.
+                    throne: Only the king may sit on the throne.
+                actions:
+                    kiss princess: 
+                        result: She slaps you - hard!
+                        aliases:
+                            - kiss the princess
+                    give princess the rose: 
+                        result: She takes it and smiles. 
+                        description: The princess is beautiful, happy, but lonely. She awaits her prince.
+                        properties:
+                            happy: 1
+            happy: 1
+            royalty: 1
     #happyprincess:
         #name: Princess
-        #description: The princess is beautiful, happy, but lonely. She awates her prince.
+        #description: 
         #talk :
-            #generic : What would you like to talk about?
-            #ghost : My father haunts the dungeon as a restless spirit.
-            #crown : Only the rightful ehir to the thrown may wear it.
-            #you / her : I cannot leave this tower until I am married.
-            #throne : Only the king may sit on the throne.
         #actions :
             #kiss: She slaps you.
             ##kiss: She slaps you. "Not until we're wed!"
@@ -164,20 +178,54 @@ actors:
         #talk :
             #generic : What would you like to talk about?
             #throne : Only the king may sit on the throne.
-        ## TODO: fix this
-        ##actions :
-            ##kiss: *smooch*
-    #door:
-        #name: Locked Door
-        #description: The guard is brandishing his short sword.
         #actions :
-            #kick : that hurts
-            #open : how?
-            #open with key : remove door from towerstairs description, remove key, add up exit to tower stairs
+            #kiss: *smooch*
+    door:
+        name: Locked Door
+        properties:
+            locked: 1
+        check_property:
+            locked: 
+                is: 1
+                description: A heavy, oaken door. It is locked.
+                blocks: up
+                actions :
+                    kick door: 
+                        result: Ouch! That hurts!
+                    open door: 
+                        result: How?
+                    open door with key: 
+                        result: The key gives a quiet click in the lock, and the door swings open.
+                        unblocks: up
+                        check:
+                            inventory:
+                                key: 1
+                        properties:
+                            locked: 0
+            locked: 
+                is: 0
+                description: A heavy, oaken door. It is unlocked.
+                unblocks: up
+                actions :
+                    kick door: 
+                        result: Ouch! That hurts!
+                    open door: 
+                        result: The door is already open.
+                    open door with key: 
+                        result: The door is already open.
     guard:
         name: Guard
-        description: The guard is brandishing his short sword.
+        description: The guard stands tall, and is brandishing his short sword. He looks pretty tough.
         blocks: east
+        conditions:
+            player:
+                properties:
+                    royalty:
+                        is: 1
+                        result: The guard awakens.
+                        description: "The guard stands on one knee and says, 'Hail, my King!'"
+                        properties:
+                            ko: 0
         actions:
             fight guard:
                 result: The guard beats you to death.
@@ -186,31 +234,22 @@ actors:
                     - attack guard
                     - punch guard
             hit with branch: 
-                result: You knock the guard out with the branch. The branch breaks.
+                result: You knock the guard out with the branch. The branch breaks. The guard drops a key.
+                items:
+                    - key
+                description: The guard is slumped over, and appears to be knocked out.
                 inventory:
-                    branch: remove
+                    branch: drop
                 properties:
                     ko: 1
                 unblocks: east
-    #koguard :
-        #name : Incapacitated Guard
-        #description : The guard has been knocked out.
-        #items:
-            #key : 1,
-        #actions:
-            #search : The guard has a key.
-            #take sword : He's laying on it and is too heavy to move.
-    #humbleguard :
-        #name : Guard
-        #description : The guard kneels before and hails you. Sire!
-    #bush :
-        #name : Rosebush
-        #description: A rose bush with a single red rose.
-        #items :
-            #rose : 1
-        ## Not necessary if the alias matches the identifier or the name
-        #aliases :
-            #rosebush
+    rosebush:
+        name: Rosebush
+        description: A rose bush with a single red rose.
+        items:
+            - rose
+        aliases:
+            bush
     troll:
         name: Troll
         description: A mean looking troll.
@@ -244,22 +283,20 @@ items:
     key:
         name : Key
         description: A small gold key.
-        #actions:
-            #unlock tower door : ok
     fish:
         name: Fish
         description: You have a fish. It is raw.
-        #actions:
-            #eat :
-                #description: You can't eat it. It is raw.
-            #smell :
-                #description: It smells fishy.
+        actions:
+            eat:
+                result: You can't eat it. It is raw.
+            smell:
+                result: It smells fishy.
     fishpole:
         name: Fishing Pole
         description: A simple fishing pole.
-    #branch:
-        #name: Branch
-        #description: It is stout and dead.
+    branch:
+        name: Branch
+        description: It is stout and dead.
     lamp:
         name: Lamp
         description: A small lamp. It is unlit.
@@ -271,16 +308,17 @@ items:
                 description: A small lamp. It is lit.
                 properties:
                     lit: 1
-    #rose:
-        #name : Red Rose
-        #description : A beautiful red rose.
-        #actions:
-            #smell :
-                #description: It smells good.
+    rose:
+        name: Red Rose
+        description: A beautiful red rose.
+        actions:
+            smell:
+                result: It smells good.
 player:
     inventory:
         lamp: 1
     start_location: cottage
     current_location: cottage
+    points: 0
     properties:
         royalty: 0

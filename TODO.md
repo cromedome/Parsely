@@ -22,6 +22,8 @@ saves/ - one YAML file per saved game. YAML is name of saved game. (DONE)
 
 Mission->load(), save(), validate(), etc. (DONE)
 
+TODO: visited properties in locations. Save them!
+
 Goals:
 - Easy for non-techies to make content for
 - Easy to run and play
@@ -48,3 +50,7 @@ Slugs should be needed for creating new Things (DONE)
 gamestate should be sent to all game actions
 
 move = run = walk = go
+
+May not need item properties as I envisioned them. Will have to see how restoring gamestate works.
+look at differences between guard and door and see what works better.
+
