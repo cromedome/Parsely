@@ -34,6 +34,8 @@ sub reset( $self ) {
     $self->name( '' );
     $self->description( '' );
     $self->start_location( '' );
+    $self->current_location( '' );
+    $self->deaths( 0 );
     $self->looks( {} );
     $self->properties( {} );
     $self->inventory( {} );
