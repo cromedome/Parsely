@@ -19,7 +19,6 @@ Goals:
 Needs:
 - more testing
 - more validation
-- less validation boilerplate
 
 Expansion ideas:
 - Multiplayer? (multiple people playing single-player games)
@@ -37,6 +36,7 @@ Tests:
 - no duplicate slugs
 - everything has a default state
 - Test that exit roles return exits (?)
+- location: make sure ancestor and my set_state work
 
 Player: 
 - Part of game, not mission
@@ -52,5 +52,5 @@ look at differences between guard and door and see what works better.
 
 Talk: 
 - Didn't take long to make a base Thing
-- Immutable actors, or complex definition?
-
+- Immutable actors, or complex definition? Neither - state!
+- Boilerplate validation: how I fixed.

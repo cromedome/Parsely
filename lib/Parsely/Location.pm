@@ -29,5 +29,17 @@ has exits => (
     isa => HashRef,
 );
 
+# Locations have a few more concerns than other things
+after set_state => sub( $self, $state = 'default') {
+    # We'd have croaked by now if state were invalid
+    $self->initial_description( 
+        $self->_state_data->{ $state }{ initial_description } // 
+        $self->_state_data->{ $state }{ description } 
+    );
+    $self->items     ( $self->_state_data->{ $state }{ items  } // [] );
+    $self->actors    ( $self->_state_data->{ $state }{ actors } // [] );
+    $self->exits     ( $self->_state_data->{ $state }{ exits  } // {} );
+};
+
 1;
 

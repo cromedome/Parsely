@@ -2,8 +2,8 @@
 name: Action Castle
 greeting: "Welcome to Action Castle!"
 locations:
-    default:
-        cottage:
+    cottage:
+        default:
             name: Cottage
             description: You are standing in a small cottage.
             items: 
@@ -131,9 +131,9 @@ locations:
                 east: throne
             items:
                 - candle
-    throne:
+    throneroom:
         default:
-            name : Throne Room
+            name: Throne Room
             description: This is the throne room of Action Castle. There is an ornate golden throne here.
             actors:
                 - throne
@@ -295,51 +295,60 @@ actors:
                     aliases:
                         - feed fish to troll
 items:
-    candle :
-        name : Strange Candle
-        description : The candle is covered in strange runes.
-        #actions:
-            #read : The runes seem to be a spell of exorcism.
+    candle:
+        default:
+            name: Strange Candle
+            description: The candle is covered in strange runes.
+            #actions:
+                #read : The runes seem to be a spell of exorcism.
     crown:
-        name : Crown
-        description: A golden crown fit for royalty.
-        #actions:
-            #wear: You wouldn't feel right wearing this crown since you are not royalty.
-
+        default:
+            name: Crown
+            description: A golden crown fit for royalty.
+            #actions:
+                #wear: You wouldn't feel right wearing this crown since you are not royalty.
     key:
-        name : Key
-        description: A small gold key.
+        default:
+            name: Key
+            description: A small gold key.
     fish:
-        name: Fish
-        description: You have a fish. It is raw.
-        actions:
-            eat:
-                result: You can't eat it. It is raw.
-            smell:
-                result: It smells fishy.
+        default:
+            name: Fish
+            description: You have a fish. It is raw.
+            actions:
+                eat:
+                    result: You can't eat it. It is raw.
+                smell:
+                    result: It smells fishy.
     fishpole:
-        name: Fishing Pole
-        description: A simple fishing pole.
+        default:
+            name: Fishing Pole
+            description: A simple fishing pole.
     branch:
-        name: Branch
-        description: It is stout and dead.
+        default:
+            name: Branch
+            description: It is stout and dead.
     lamp:
-        name: Lamp
-        description: A small lamp. It is unlit.
-        properties: 
-            lit: 0
-        actions:
-            light:
-                result: Lamp is now lit!
-                description: A small lamp. It is lit.
-                properties:
-                    lit: 1
+        default:
+            name: Unlit Lamp
+            description: A small lamp. It is unlit.
+            actions:
+                light:
+                    result: Lamp is now lit!
+                    change_state: lit
+        lit:
+            name: Lamp
+            description: A small lamp. It is lit.
+            actions:
+                light:
+                    result: Lamp is already lighted!
     rose:
-        name: Red Rose
-        description: A beautiful red rose.
-        actions:
-            smell:
-                result: It smells good.
+        default:
+            name: Red Rose
+            description: A beautiful red rose.
+            actions:
+                smell:
+                    result: It smells good.
 player:
     inventory:
         lamp: 1
