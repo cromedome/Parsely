@@ -87,17 +87,18 @@ sub save( $self ) {
 }
 
 sub start_game( $self ) {
-    # TODO: we have a new game loaded. Get the player started!
     $self->player->current_location( $self->player->start_location );
+    # TODO: look at room, set visited property
     return 1;
 }
 
-# TODO: Throw GameOver exception? Wrap actions in try/catch?
 sub game_over( $self, $condition ){
+    # TODO: compute score
+    # TODO: play again? call start_game instead!
     return 1;
 }
 
-sub take_game_action( $self, $action ) {
+sub take_game_action( $self, $action, $args ) {
     return 1;
 }
 

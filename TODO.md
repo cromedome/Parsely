@@ -30,6 +30,9 @@ Expansion ideas:
 Add docs for mission building.
 
 Tests:
+- location: ancestor
+- player: reset
+- adventure: score(), have actions
 - valid mission
 - invalid mission. Then test for everything wrong with it.
 - no duplicate slugs
@@ -44,7 +47,7 @@ Add base object with name, description, looks, properties, save(), load() (DONE)
 Slugs should be needed for creating new Things (DONE)
 gamestate should be sent to all game actions
 
-move = run = walk = go
+move = run = walk = go. Set visited property
 
 Talk: 
 - Didn't take long to make a base Thing

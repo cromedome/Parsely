@@ -64,6 +64,7 @@ sub new_game( $self, $adventure ) {
             $self->_ng_locations( $config );
             $self->_ng_actors( $config );
             $self->_ng_items( $config );
+            # TODO: load actions
         }
     }
     else {
