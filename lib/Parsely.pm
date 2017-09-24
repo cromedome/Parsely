@@ -88,6 +88,7 @@ sub save( $self ) {
 
 sub start_game( $self ) {
     # TODO: we have a new game loaded. Get the player started!
+    $self->player->current_location( $self->player->start_location );
     return 1;
 }
 
