@@ -1,4 +1,3 @@
-Test that exit roles return exits.
 Make missions a plugin-style folder structure.
 Missions can have their own roles
 
@@ -7,7 +6,6 @@ Game actions live in existing namespace
 
 TODO: visited properties in locations. Save them!
 TODO: Score!
-TODO: Load player state?
 TODO: item, actor, thing state
 
 ACTIONS: talk, look, attack, unlock, light, take, move, open, block
@@ -17,6 +15,11 @@ Goals:
 - Easy to run and play
 - Few dependencies as possible
 - Get a little out of my comfort zone (YAML, Mojo)
+
+Needs:
+- more testing
+- more validation
+- less validation boilerplate
 
 Expansion ideas:
 - Multiplayer? (multiple people playing single-player games)
@@ -28,9 +31,12 @@ Expansion ideas:
 Add docs for mission building.
 
 Tests:
+- thing.t set_state() croak
 - valid mission
 - invalid mission. Then test for everything wrong with it.
 - no duplicate slugs
+- everything has a default state
+- Test that exit roles return exits (?)
 
 Player: 
 - Part of game, not mission

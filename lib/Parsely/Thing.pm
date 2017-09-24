@@ -36,19 +36,46 @@ has actions => (
     isa => HashRef,
 );
 
+has _state_data => (
+    is  => 'ro',
+    isa => HashRef,
+);
+
+sub BUILD {
+    my( $self, $args ) = @_;
+    # Adventures have no state. But this is ugly. There has to be a better way???
+    $self->set_state unless $self->isa( 'Parsely::Adventure' );
+}
+
 sub save( $self, $gamestate ) {
-    die "No gamestate provided!" unless $gamestate;
+    croak "No gamestate provided!" unless $gamestate;
 
     $gamestate->set( $self->slug . "|properties",  $self->_stringify( $self->properties // {} ));
 }
 
 sub load( $self, $gamestate, $slug ) {
-    die "No gamestate provided!" unless $gamestate;
-    die "No slug provided!"      unless $slug;
+    croak "No gamestate provided!" unless $gamestate;
+    croak "No slug provided!"      unless $slug;
 
     my $prop_string = $gamestate->get( "$slug|properties" ) // '';
     my $props = $self->_hashify( $prop_string );
     $self->properties( $props );
+    $self->set_state( $props->{ current_state } // 'default' );
+}
+
+# What state is the player in? While players can change state, while in
+# a state, a player is immutable. Changing state gives the illusion that
+# something changed.
+sub set_state( $self, $state = 'default') {
+    croak "Invalid object state provided to set_state()" 
+        unless exists $self->_state_data->{ $state };
+
+    $self->description( $self->_state_data->{ $state }{ description } );
+    $self->name       ( $self->_state_data->{ $state }{ name } );
+    $self->looks      ( $self->_state_data->{ $state }{ looks }      // {} );
+    $self->properties ( $self->_state_data->{ $state }{ properties } // {} );
+    # TODO: Talk!
+    # TODO: actions!
 }
 
 sub set_property( $self, $key, $value ) {
@@ -63,12 +90,12 @@ sub get_property( $self, $key ) {
 }
 
 sub _stringify( $self, $thingy ) {
-    die "Nothing to stringify!" unless defined $thingy;
+    croak "Nothing to stringify!" unless defined $thingy;
     return join ',', map{ $_ . ':' . $thingy->{ $_ } } keys %$thingy;
 }
 
 sub _hashify( $self, $stringy ) {
-    die "Nothing to hashify!" unless defined $stringy;
+    croak "Nothing to hashify!" unless defined $stringy;
 
     my %thingy;
     my @things = split /,/, $stringy;

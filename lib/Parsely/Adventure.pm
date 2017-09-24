@@ -45,7 +45,7 @@ sub get_location( $self, $location ) {
 }
 
 sub load( $self, $gamestate, $adventure ) {
-    $_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
+    #$_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
     return 1;
 }
 
@@ -61,9 +61,9 @@ sub new_game( $self, $adventure ) {
             $self->_check_slug( $adventure, 'adventure' );
             $self->slug( $adventure );
             $self->name( $config->{ name } );
-            $self->_ng_locations( $config );
+            #$self->_ng_locations( $config );
             $self->_ng_actors( $config );
-            $self->_ng_items( $config );
+            #$self->_ng_items( $config );
         }
     }
     else {
@@ -85,7 +85,7 @@ sub validate( $self, $config ) {
     my $valid = 1;
     $valid = $self->_validate_locations( $config );
     $valid = $self->_validate_actors   ( $config );
-    $valid = $self->_validate_items    ( $config );
+    #$valid = $self->_validate_items    ( $config );
 
     return $valid;
 }
@@ -101,32 +101,48 @@ sub _check_slug( $self, $slug, $what ) {
     }
 }
 
-sub _validate_actors( $self, $config ) {
-    croak "No adventure configuration in _validate_actors()" unless $config;
+sub _validate_thing( $self, $config, $what, $key ) {
+    croak "No adventure configuration in _validate_${ key }()" unless $config;
+    croak "No label given to _validate_thing()"                unless $what;
+    croak "No key given to _validate_thing()"                  unless $key;
 
-    my $valid = 1;
-    my @actors = keys %{ $config->{ actors }};
-    if( @actors == 0 ) {
-        warn "No actors defined in game config!";
+    my $valid   = 1;
+    my $default = 0;
+    my @things  = keys %{ $config->{ $key }};
+    if( @things == 0 ) {
+        warn "No $what defined in game config!";
     }
     else {
-        foreach my $actor( @actors ) {
-            my $actor_info = $config->{ actors }->{ $actor };
-            my $message  = "Actor '$actor' has no";
-            warn "$message name!"        unless $actor_info->{ name };
-            warn "$message description!" unless $actor_info->{ description };
-            $valid = 0 if $message =~ /name|description/;
+        foreach my $thing( @things ) {
+            my $info = $config->{ actors }->{ $thing };
+            foreach my $state( keys %{ $info })  {
+                $default = 1 if $state eq 'default';
+                my $message = uc( $what ) . " '$thing' has no %s for '$state' state!";
+                warn sprintf $message, 'name'        unless $info->{ $state }->{ name };
+                warn sprintf $message, 'description' unless $info->{ $state }->{ description };
+                $valid = 0 if $message =~ /name|description/;
+            }
+            
+            if( !$default ) {
+                warn "No default state for $what '$thing'!";
+                $valid = 0;
+            }
         }
     }
 
     return $valid;
 }
 
+sub _validate_actors( $self, $config ) {
+    return $self->_validate_thing( $config, 'actor', 'actors' );
+}
+
 sub _validate_items( $self, $config ) {
     croak "No adventure configuration in _validate_items()" unless $config;
 
-    my $valid = 1;
-    my @items = keys %{ $config->{ items }};
+    my $valid   = 1;
+    my $default = 0;
+    my @items   = keys %{ $config->{ items }};
     if( @items == 0 ) {
         warn "No items defined in game config!";
     }
@@ -178,17 +194,10 @@ sub _ng_actors( $self, $config ) {
     for my $actor( keys %{ $config->{ actors }}) {
         $self->_check_slug( $actor, 'actor' );
 
-        my $actor_info = $config->{ actors }->{ $actor };
-        my $thing      = Parsely::Actor->new({ slug => $actor });
-
-        $thing->description( $actor_info->{ description } );
-        $thing->name       ( $actor_info->{ name } );
-        $thing->looks      ( $actor_info->{ looks }      // {} );
-        $thing->properties ( $actor_info->{ properties } // {} );
-        # TODO: Talk!
-        # TODO: actions!
-
-        push @actors, $thing;
+        push @actors, Parsely::Actor->new({ 
+            slug        => $actor,
+            _state_data => $config->{ actors }->{ $actor },
+        });
     }
 
     $self->actors( \@actors );
