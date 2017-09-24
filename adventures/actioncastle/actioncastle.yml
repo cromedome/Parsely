@@ -353,7 +353,5 @@ player:
     inventory:
         lamp: 1
     start_location: cottage
-    current_location: cottage
-    points: 0
     properties:
         royalty: 0

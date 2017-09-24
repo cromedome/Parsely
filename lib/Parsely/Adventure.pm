@@ -45,7 +45,7 @@ sub get_location( $self, $location ) {
 }
 
 sub load( $self, $gamestate, $adventure ) {
-    #$_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
+    $_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
     return 1;
 }
 

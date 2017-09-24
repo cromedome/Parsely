@@ -43,8 +43,9 @@ has _state_data => (
 
 sub BUILD {
     my( $self, $args ) = @_;
-    # Adventures have no state. But this is ugly. There has to be a better way???
-    $self->set_state unless $self->isa( 'Parsely::Adventure' );
+    # Adventures and players have no state. But this is ugly. There has to be a better way???
+    $self->set_state unless 
+        $self->isa( 'Parsely::Adventure' ) || $self->isa( 'Parsely::Player' );
 }
 
 sub save( $self, $gamestate ) {
@@ -59,8 +60,8 @@ sub load( $self, $gamestate, $slug ) {
 
     my $prop_string = $gamestate->get( "$slug|properties" ) // '';
     my $props = $self->_hashify( $prop_string );
-    $self->properties( $props );
     $self->set_state( $props->{ current_state } // 'default' );
+    $self->properties( $props );
 }
 
 # What state is the player in? While players can change state, while in
