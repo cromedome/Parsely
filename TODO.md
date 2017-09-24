@@ -2,7 +2,6 @@ Make missions a plugin-style folder structure.
 Missions can have their own roles
 
 Separate namespace for game plugins/modules? Can distribute code and config file in one structure.
-Game actions live in existing namespace
 
 TODO: visited properties in locations. Save them!
 TODO: Score!
@@ -25,12 +24,12 @@ Expansion ideas:
 - Chat?
 - Multiple things per location
 - Deployment
+- Media in game folder
 - All-in-one client and game in Electron
 
 Add docs for mission building.
 
 Tests:
-- thing.t set_state() croak
 - valid mission
 - invalid mission. Then test for everything wrong with it.
 - no duplicate slugs
@@ -46,9 +45,6 @@ Slugs should be needed for creating new Things (DONE)
 gamestate should be sent to all game actions
 
 move = run = walk = go
-
-May not need item properties as I envisioned them. Will have to see how restoring gamestate works.
-look at differences between guard and door and see what works better.
 
 Talk: 
 - Didn't take long to make a base Thing

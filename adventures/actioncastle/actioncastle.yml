@@ -152,15 +152,24 @@ actors:
         default:
             name: Throne
             description: An ornate golden throne.
-            #actions:
-                #sit (not royal) : You think better of it since you are not royalty.
-                #sit (royal) : You sit on the ornate golden throne. The people cheer for the new ruler of Action Castle! Game over.
+            actions:
+                sit:
+                    role: sit
+                    property: royalty
+                    args:
+                        0: You think better of it since you are not royalty.
+                        1: You sit on the ornate golden throne. The people cheer for the new ruler of Action Castle!
+                    game_over: 5
     ghost:
         default:
             name: Spooky Ghost
             description: The ghost has bony, claw-like fingers, and wears a crown.
-            #action :
-                #use candle : The candle gives off a strange, acrid-smelling smoke. The ghost drops it's crown and flees.
+            actions:
+                use candle: 
+                    result: The candle gives off a strange, acrid-smelling smoke. The ghost drops its crown and flees.
+                    inventory: dungeon:crown
+                take:
+                    role: take
     #princess:
         #name: Princess
         #properties:
@@ -292,7 +301,7 @@ actors:
             blocks: courtyard
             actions:
                 fight:
-                    game_over: 1
+                    game_over: -1
                     result: The troll beats you to death.
                     aliases:
                         - attack troll
@@ -309,14 +318,19 @@ items:
         default:
             name: Strange Candle
             description: The candle is covered in strange runes.
-            #actions:
-                #read : The runes seem to be a spell of exorcism.
+            actions:
+                read: The runes seem to be a spell of exorcism.
     crown:
         default:
             name: Crown
             description: A golden crown fit for royalty.
-            #actions:
-                #wear: You wouldn't feel right wearing this crown since you are not royalty.
+            actions:
+                wear crown: 
+                    role: wear 
+                    property: royalty
+                    args:
+                        0: You wouldn't feel right wearing this crown since you are not royalty.
+                        1: You place the crown upon your head.
     key:
         default:
             name: Key
