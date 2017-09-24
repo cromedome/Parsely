@@ -23,6 +23,11 @@ saves/ - one YAML file per saved game. YAML is name of saved game. (DONE)
 Mission->load(), save(), validate(), etc. (DONE)
 
 TODO: visited properties in locations. Save them!
+TODO: Score!
+TODO: Load player state?
+TODO: item, actor, thing state
+
+ACTIONS: talk, look, attack, unlock, light, take, move, open, block
 
 Goals:
 - Easy for non-techies to make content for
@@ -53,4 +58,8 @@ move = run = walk = go
 
 May not need item properties as I envisioned them. Will have to see how restoring gamestate works.
 look at differences between guard and door and see what works better.
+
+Talk: 
+- Didn't take long to make a base Thing
+- Immutable actors, or complex definition?
 

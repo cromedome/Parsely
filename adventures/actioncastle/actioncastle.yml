@@ -146,6 +146,21 @@ actors:
                 is: 0
                 description: The princess is beautiful, sad, and lonely. She awaits her prince.
                 talk:
+                    generic: She looks sad, but says nothing.
+                actions:
+                    kiss princess: 
+                        result: She slaps you - hard!
+                        aliases:
+                            - kiss the princess
+                    give princess the rose: 
+                        result: She takes it and smiles. 
+                        description: The princess is beautiful, happy, but lonely. She awaits her prince.
+                        properties:
+                            happy: 1
+            happy: 
+                is: 1
+                description: The princess is beautiful, happy, but lonely. She awaits her prince.
+                talk:
                     generic: What would you like to talk about?
                     ghost: My father haunts the dungeon as a restless spirit.
                     crown: Only the rightful heir to the thrown may wear it.
@@ -161,7 +176,6 @@ actors:
                         description: The princess is beautiful, happy, but lonely. She awaits her prince.
                         properties:
                             happy: 1
-            happy: 1
             royalty: 1
     #happyprincess:
         #name: Princess
@@ -239,7 +253,7 @@ actors:
                     - key
                 description: The guard is slumped over, and appears to be knocked out.
                 inventory:
-                    branch: drop
+                    branch: destroy
                 properties:
                     ko: 1
                 unblocks: east
@@ -249,7 +263,7 @@ actors:
         items:
             - rose
         aliases:
-            bush
+            - bush
     troll:
         name: Troll
         description: A mean looking troll.
