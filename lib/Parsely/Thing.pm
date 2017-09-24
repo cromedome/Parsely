@@ -80,12 +80,14 @@ sub set_state( $self, $state = 'default') {
 }
 
 sub set_property( $self, $key, $value ) {
+    croak "Need to specify key/value to set_property()!" unless $key && $value;
     my $props = $self->properties;
     $props->{ $key } = $value;
     $self->properties( $props );
 }
 
 sub get_property( $self, $key ) {
+    croak "Need to specify key to get_property()!" unless $key;
     my $props = $self->properties;
     return $props->{ $key } // undef;
 }

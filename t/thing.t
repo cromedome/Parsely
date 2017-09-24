@@ -7,6 +7,7 @@ use Parsely::Thing;
 my $slug = "test";
 my $name = "Test Thing";
 my $description = "This is just a plain ol' boring test thingy";
+my $other = "This is just a less boring test thingy";
 my %looks = (
     sideways => 'You look sideways at the silly thing.',
 );
@@ -17,9 +18,14 @@ my %props = (
 );
 my $args = {
     default => {
-        slug        => $slug,
         name        => $name,
         description => $description,
+        looks       => \%looks,
+        properties  => \%props,
+    },
+    other => {
+        name        => $name,
+        description => $other,
         looks       => \%looks,
         properties  => \%props,
     },
@@ -32,6 +38,11 @@ ok( $name eq $thing->name, "...and with a name of $name" );
 ok( $description eq $thing->description, "...and with the right description" );
 cmp_deeply( \%looks, $thing->looks, "...and all the same looks" );
 cmp_deeply( \%props, $thing->properties, "...and the same properties too" );
+cmp_deeply( $args, $thing->_state_data, "...and is initialized with all state data" );
+
+# Change state
+$thing->set_state( 'other' ); 
+ok( $thing->description eq $other, "Changed thing to another object state" );
 
 # Set/get_property
 ok( !defined $thing->get_property( 'jason' ), "Key 'jason' doesn't exist yet" );
@@ -62,6 +73,19 @@ cmp_deeply( $thing->properties, $thing1->properties,
     "...and was successfully loaded to a new object" );
 
 # Exceptions
+throws_ok{ $thing->set_property( undef, undef ) }
+    qr/Need to specify key\/value/,
+    "set_property() dies when no key is provided";
+throws_ok{ $thing->set_property( 'key', undef ) }
+    qr/Need to specify key\/value/,
+    "...and when no value is provided";
+throws_ok{ $thing->get_property( undef ) }
+    qr/Need to specify key/,
+    "get_property() dies when no key is provided";
+throws_ok{ $thing->set_state( 'asjkdhdajk' ) }
+    qr/Invalid object state/,
+    "set_state() dies when an invalid state is provided";
+
 throws_ok{ $thing->save( undef ) }
     qr/No gamestate provided/,
     "save() dies when no gamestate is provided";
