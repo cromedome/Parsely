@@ -101,52 +101,49 @@ sub _check_slug( $self, $slug, $what ) {
     }
 }
 
-sub _validate_actors( $self, $config ) {
-    croak "No adventure configuration in _validate_actors()" unless $config;
+sub _validate_thing( $self, $config, $what, $key ) {
+    croak "No adventure configuration in _validate_${ key }()" unless $config;
+    croak "No label given to _validate_thing()"                unless $what;
+    croak "No key given to _validate_thing()"                  unless $key;
 
-    my $valid = 1;
-    my @actors = keys %{ $config->{ actors }};
-    if( @actors == 0 ) {
-        warn "No actors defined in game config!";
+    my $valid   = 1;
+    my $default = 0;
+    my @things  = keys %{ $config->{ $key }};
+    if( @things == 0 ) {
+        warn "No $what defined in game config!";
     }
     else {
-        foreach my $actor( @actors ) {
-            my $actor_info = $config->{ actors }->{ $actor };
-            my $message  = "Actor '$actor' has no";
-            warn "$message name!"        unless $actor_info->{ name };
-            warn "$message description!" unless $actor_info->{ description };
-            $valid = 0 if $message =~ /name|description/;
+        foreach my $thing( @things ) {
+            my $info = $config->{ $key }->{ $thing };
+            foreach my $state( keys %{ $info })  {
+                $default = 1 if $state eq 'default';
+                my $message = uc( $what ) . " '$thing' has no %s for '$state' state!";
+                warn sprintf $message, 'name'        unless $info->{ $state }->{ name };
+                warn sprintf $message, 'description' unless $info->{ $state }->{ description };
+                $valid = 0 if $message =~ /name|description/;
+            }
+            
+            if( !$default ) {
+                warn "No default state for $what '$thing'!";
+                $valid = 0;
+            }
         }
     }
 
     return $valid;
+}
+
+sub _validate_actors( $self, $config ) {
+    return $self->_validate_thing( $config, 'actor', 'actors' );
 }
 
 sub _validate_items( $self, $config ) {
-    croak "No adventure configuration in _validate_items()" unless $config;
-
-    my $valid = 1;
-    my @items = keys %{ $config->{ items }};
-    if( @items == 0 ) {
-        warn "No items defined in game config!";
-    }
-    else {
-        foreach my $item( @items ) {
-            my $item_info = $config->{ items }->{ $item };
-            my $message  = "Item '$item' has no";
-            warn "$message name!"        unless $item_info->{ name };
-            warn "$message description!" unless $item_info->{ description };
-            $valid = 0 if $message =~ /name|description/;
-        }
-    }
-
-    return $valid;
+    return $self->_validate_thing( $config, 'item', 'items' );
 }
 
 sub _validate_locations( $self, $config ) {
-    croak "No adventure configuration in _validate_locations()" unless $config;
+    my $valid = $self->_validate_thing( $config, 'location', 'locations' );
 
-    my $valid = 1;
     my @locations = keys %{ $config->{ locations }};
     if( @locations == 0 ) {
         warn "No locations defined in game config!";
@@ -154,11 +151,12 @@ sub _validate_locations( $self, $config ) {
     else {
         foreach my $location( @locations ) {
             my $loc_info = $config->{ locations }->{ $location };
-            my $message  = "Location '$location' has no";
-            warn "$message name!"        unless $loc_info->{ name };
-            warn "$message exits!"       unless $loc_info->{ exits };
-            warn "$message description!" unless $loc_info->{ description };
-            $valid = 0 if $message =~ /name|exits|description/;
+            foreach my $state( keys %{ $loc_info })  {
+                unless( $loc_info->{ $state }->{ exits } ) {
+                    warn "Location '$location' has no exits for '$state' state!";
+                    $valid = 0;
+                }
+            }
         }
     }
 
@@ -178,17 +176,10 @@ sub _ng_actors( $self, $config ) {
     for my $actor( keys %{ $config->{ actors }}) {
         $self->_check_slug( $actor, 'actor' );
 
-        my $actor_info = $config->{ actors }->{ $actor };
-        my $thing      = Parsely::Actor->new({ slug => $actor });
-
-        $thing->description( $actor_info->{ description } );
-        $thing->name       ( $actor_info->{ name } );
-        $thing->looks      ( $actor_info->{ looks }      // {} );
-        $thing->properties ( $actor_info->{ properties } // {} );
-        # TODO: Talk!
-        # TODO: actions!
-
-        push @actors, $thing;
+        push @actors, Parsely::Actor->new({ 
+            slug        => $actor,
+            _state_data => $config->{ actors }->{ $actor },
+        });
     }
 
     $self->actors( \@actors );
@@ -201,16 +192,10 @@ sub _ng_items( $self, $config ) {
     for my $item( keys %{ $config->{ items }}) {
         $self->_check_slug( $item, 'item' );
 
-        my $item_info = $config->{ items }->{ $item };
-        my $thing     = Parsely::Item->new({ slug => $item });
-
-        $thing->description( $item_info->{ description } );
-        $thing->name       ( $item_info->{ name } );
-        $thing->looks      ( $item_info->{ looks }      // {} );
-        $thing->properties ( $item_info->{ properties } // {} );
-        # TODO: actions!
-
-        push @items, $thing;
+        push @items, Parsely::Item->new({ 
+            slug        => $item,
+            _state_data => $config->{ items }->{ $item },
+        });
     }
 
     $self->items( \@items );
@@ -223,22 +208,10 @@ sub _ng_locations( $self, $config ) {
     for my $location( keys %{ $config->{ locations }}) {
         $self->_check_slug( $location, 'location' );
 
-        my $loc_info = $config->{ locations }->{ $location };
-        my $room     = Parsely::Location->new({ slug => $location });
-
-        $room->initial_description( 
-            $loc_info->{ initial_description } // $loc_info->{ description } );
-        $room->description( $loc_info->{ description } );
-        $room->name( $loc_info->{ name } );
-
-        $room->items     ( $loc_info->{ items  }     // [] );
-        $room->actors    ( $loc_info->{ actors }     // [] );
-        $room->exits     ( $loc_info->{ exits }      // {} );
-        $room->looks     ( $loc_info->{ looks }      // {} );
-        $room->properties( $loc_info->{ properties } // {} );
-        # TODO: actions!
-
-        push @locations, $room;
+        push @locations, Parsely::Location->new({ 
+            slug        => $location,
+            _state_data => $config->{ locations }->{ $location },
+        });
     }
 
     $self->locations( \@locations );

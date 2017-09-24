@@ -15,17 +15,18 @@ my %props = (
     thing1 => 'thing2',
     foo    => 'bar',
 );
-
+my $args = {
+    default => {
+        slug        => $slug,
+        name        => $name,
+        description => $description,
+        looks       => \%looks,
+        properties  => \%props,
+    },
+};
 my $gamestate = Cache::FastMmap->new;
 
-my $thing = Parsely::Thing->new( 
-    slug        => $slug,
-    name        => $name,
-    description => $description,
-    looks       => \%looks,
-    properties  => \%props,
-);
-
+my $thing = Parsely::Thing->new( slug => $slug, _state_data => $args );
 ok( $slug eq $thing->slug, "A new thing was created with a slug of $slug" );
 ok( $name eq $thing->name, "...and with a name of $name" );
 ok( $description eq $thing->description, "...and with the right description" );
@@ -55,7 +56,7 @@ ok( $gamestate->get( "$slug|properties" ) eq $thing->_stringify( $thing->propert
     "Thing was saved to gamestate successfully" );
 
 # Load
-my $thing1 = Parsely::Thing->new( slug => "new" );
+my $thing1 = Parsely::Thing->new( slug => "new", _state_data => $args );
 $thing1->load( $gamestate, $slug );
 cmp_deeply( $thing->properties, $thing1->properties, 
     "...and was successfully loaded to a new object" );

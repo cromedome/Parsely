@@ -1,30 +1,11 @@
-Test that exit roles return exits.
-TODO tests for player methods
 Make missions a plugin-style folder structure.
 Missions can have their own roles
-
-See notes in actioncastle.yaml
-
-Missions or area descriptions as YAML
-Immutable objects. Config easier than code!
-Actors: items, characters, NPCs, etc.
 
 Separate namespace for game plugins/modules? Can distribute code and config file in one structure.
 Game actions live in existing namespace
 
-Parsely.pm - Game engine (DONE)
-Parsely/Item, Actor, Location, etc: Objects that represent in game things (DONE)
-Parsely/Role/Item, Actor, etc: Implements items in game engine. Use is one, etc. (DONE)
-Parsely/Mission: a mission. has a YAML config file (DONE)
-missions/actioncastle, etc.: mission data (DONE)
-missions/actioncastle/roles: custom roles
-saves/ - one YAML file per saved game. YAML is name of saved game. (DONE)
-
-Mission->load(), save(), validate(), etc. (DONE)
-
 TODO: visited properties in locations. Save them!
 TODO: Score!
-TODO: Load player state?
 TODO: item, actor, thing state
 
 ACTIONS: talk, look, attack, unlock, light, take, move, open, block
@@ -35,17 +16,27 @@ Goals:
 - Few dependencies as possible
 - Get a little out of my comfort zone (YAML, Mojo)
 
+Needs:
+- more testing
+- more validation
+
 Expansion ideas:
 - Multiplayer? (multiple people playing single-player games)
 - Chat?
 - Multiple things per location
+- Deployment
+- All-in-one client and game in Electron
 
 Add docs for mission building.
 
 Tests:
+- thing.t set_state() croak
 - valid mission
 - invalid mission. Then test for everything wrong with it.
 - no duplicate slugs
+- everything has a default state
+- Test that exit roles return exits (?)
+- location: make sure ancestor and my set_state work
 
 Player: 
 - Part of game, not mission
@@ -61,5 +52,5 @@ look at differences between guard and door and see what works better.
 
 Talk: 
 - Didn't take long to make a base Thing
-- Immutable actors, or complex definition?
-
+- Immutable actors, or complex definition? Neither - state!
+- Boilerplate validation: how I fixed.
