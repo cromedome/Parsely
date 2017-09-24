@@ -12,6 +12,17 @@ has start_location => (
     isa => Str,
 );
 
+has current_location => (
+    is  => 'rw',
+    isa => Str,
+);
+
+has deaths => (
+    is      => 'rw',
+    isa     => Int,
+    default => 0,
+);
+
 has inventory => (
     is      => 'rw',
     isa     => HashRef,
