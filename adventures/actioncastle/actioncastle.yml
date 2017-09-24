@@ -111,14 +111,22 @@ locations:
                 darkness: It is too dark to see.
             exits:
                 up: courtyard
-                down: dungeon # blocked by darkness
+                down: dungeon 
+        lit:
+            name: Dungeon Stairs
+            description: You are climbing the stairs down to the dungeon.
+            looks:
+                darkness: It is too dark to see.
+            exits:
+                up: courtyard
+                down: dungeon 
     dungeon:
         default:
             name: Dungeon
             initial_description: You are in the dungeon. There is a spooky ghost here.
             description: You are in the dungeon.
             exits:
-                down: towerstairs
+                up: dungeonstairs
             actors:
                 - ghost
     hall:
@@ -128,13 +136,15 @@ locations:
             description: You stand inside the Great Feasting Hall.
             exits:
                 west: courtyard
-                east: throne
+                east: throneroom
             items:
                 - candle
     throneroom:
         default:
             name: Throne Room
             description: This is the throne room of Action Castle. There is an ornate golden throne here.
+            exits:
+                west: hall
             actors:
                 - throne
 actors:
@@ -335,7 +345,7 @@ items:
             actions:
                 light:
                     result: Lamp is now lit!
-                    change_state: lit
+                    change_state: lit,dungeonstairs:lit
         lit:
             name: Lamp
             description: A small lamp. It is lit.
