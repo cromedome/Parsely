@@ -28,11 +28,22 @@ has locations => (
     isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
 );
 
+has player => (
+    is  => 'ro',
+    isa => InstanceOf[ 'Parsely::Player' ],
+);
+
 has _slugs => (
     is      => 'rw',
     isa     => HashRef,
     default => sub{ {} },
 );
+
+# TODO: named params
+sub do_action( $self, $action, $args, $gamestate ) {
+    my $role;
+    $role->( $args, $gamestate ); # $self->player is available in role
+}
 
 sub get_location( $self, $location ) {
     croak "No location specified to get_location()" unless $location;
@@ -78,6 +89,11 @@ sub save( $self, $gamestate ) {
     $_->save( $gamestate ) foreach @{ $self->items };
     $_->save( $gamestate ) foreach @{ $self->locations };
     $self->SUPER::save( $gamestate );
+}
+
+sub set_player( $self, $player ) {
+    croak "No player provided to set_player()!" unless $player;
+    $self->player( $player );
 }
 
 sub validate( $self, $config ) {

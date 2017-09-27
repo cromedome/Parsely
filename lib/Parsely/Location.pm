@@ -41,5 +41,14 @@ after set_state => sub( $self, $state = 'default') {
     $self->exits     ( $self->_state_data->{ $state }{ exits  } // {} );
 };
 
+# What to do when a player enters a room
+sub enter( $self, $room, $player ) {
+    croak "No such room '$room' to enter()!" unless $room && $self->slug eq $room;
+    croak "No player to move via enter()!"   unless $player;
+
+    $player->current_location( $room );
+    return ();
+}
+
 1;
 

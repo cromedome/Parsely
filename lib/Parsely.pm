@@ -53,6 +53,7 @@ sub new_game( $self, $adventure ) {
 
     $self->reset;
     $self->adventure->new_game( $adventure );
+    $self->adventure->set_player( $self->player );
     return $self->start_game;
 }
 
@@ -98,7 +99,11 @@ sub game_over( $self, $condition ){
     return 1;
 }
 
-sub take_game_action( $self, $action, $args ) {
+sub do_action( $self, $action, $args ) {
+    # TODO: This!
+    $self->adventure->do_action( $action, $args, $self->gamestate );
+    $self->adventure->save( $self->gamestate );
+
     return 1;
 }
 

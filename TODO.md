@@ -33,6 +33,7 @@ Tests:
 - location: ancestor
 - player: reset
 - adventure: score(), have actions
+- set_player()
 - valid mission
 - invalid mission. Then test for everything wrong with it.
 - no duplicate slugs
@@ -40,12 +41,20 @@ Tests:
 - Test that exit roles return exits (?)
 - location: make sure ancestor and my set_state work
 
+Engine: 
+- in single player games, doesn't do much
+- Will do more for multiplayer.
+
 Player: 
-- Part of game, not mission
+- Part of game, not mission.
+- Needed for an eventual multiplayer engine.
+- But.... how does mission alter player?
+- Ran into this problem, need to pass player handle to mission.
 
 Add base object with name, description, looks, properties, save(), load() (DONE)
 Slugs should be needed for creating new Things (DONE)
 gamestate should be sent to all game actions
+in move game action, copy adventure actions into room when moving
 
 move = run = walk = go. Set visited property
 
