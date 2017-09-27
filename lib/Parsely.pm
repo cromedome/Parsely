@@ -93,15 +93,14 @@ sub start_game( $self ) {
     return 1;
 }
 
-sub game_over( $self, $condition ){
+sub game_over( $self, $extra_score ){
     # TODO: compute score
     # TODO: play again? call start_game instead!
     return 1;
 }
 
 sub do_action( $self, $action, $args ) {
-    # TODO: This!
-    $self->adventure->do_action( $action, $args, $self->gamestate );
+    $self->adventure->do_action( $action, $args );
     $self->adventure->save( $self->gamestate );
 
     return 1;

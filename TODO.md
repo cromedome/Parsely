@@ -5,9 +5,9 @@ Separate namespace for game plugins/modules? Can distribute code and config file
 
 TODO: visited properties in locations. Save them!
 TODO: Score!
-TODO: item, actor, thing state
 
 ACTIONS: talk, look, attack, unlock, light, take, move, open, block
+TODO: action dispatch table.
 
 Goals:
 - Easy for non-techies to make content for
@@ -25,6 +25,7 @@ Expansion ideas:
 - Multiple things per location
 - Deployment
 - Media in game folder
+- AJAX-y client
 - All-in-one client and game in Electron
 
 Add docs for mission building.
@@ -51,9 +52,6 @@ Player:
 - But.... how does mission alter player?
 - Ran into this problem, need to pass player handle to mission.
 
-Add base object with name, description, looks, properties, save(), load() (DONE)
-Slugs should be needed for creating new Things (DONE)
-gamestate should be sent to all game actions
 in move game action, copy adventure actions into room when moving
 
 move = run = walk = go. Set visited property
@@ -62,3 +60,5 @@ Talk:
 - Didn't take long to make a base Thing
 - Immutable actors, or complex definition? Neither - state!
 - Boilerplate validation: how I fixed.
+- Import::Base
+- Could have used roles. Future iteration!

@@ -42,12 +42,17 @@ after set_state => sub( $self, $state = 'default') {
 };
 
 # What to do when a player enters a room
-sub enter( $self, $room, $player ) {
-    croak "No such room '$room' to enter()!" unless $room && $self->slug eq $room;
-    croak "No player to move via enter()!"   unless $player;
+sub enter( $self, $args ) {
+    croak "No player specified to enter()!" unless $args->{ player };
 
-    $player->current_location( $room );
-    return ();
+    $args->{ player }->current_location( $self->slug );
+    $self->set_property( 'visited', 0 );
+    return {
+        game_over => $self->get_property( 'game_over' ) //= 0,
+        #description => $self->get_property( 'visited' ) ? $self->description : 
+            #$self->initial_description,
+
+    };
 }
 
 1;

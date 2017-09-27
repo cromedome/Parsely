@@ -6,12 +6,19 @@ use YAML 'LoadFile';
 
 use lib '.';
 use Parsely::Base;
-use Parsely::Item;
+use Parsely::Actions;
 use Parsely::Actor;
+use Parsely::Item;
 use Parsely::Thing;
 use Parsely::Location;
 
 extends 'Parsely::Thing';
+
+has actions => (
+    is      => 'rw',
+    isa     => HashRef,
+    default => sub {{}},
+);
 
 has actors => (
     is  => 'rw',
@@ -39,10 +46,11 @@ has _slugs => (
     default => sub{ {} },
 );
 
-# TODO: named params
-sub do_action( $self, $action, $args, $gamestate ) {
+sub do_action( $self, $action, $args ) {
+    $args->{ player } = $self->player;
+    # Parse out an action, call appropriate code.
     my $role;
-    $role->( $args, $gamestate ); # $self->player is available in role
+    $role->( $args );
 }
 
 sub get_location( $self, $location ) {
@@ -89,6 +97,10 @@ sub save( $self, $gamestate ) {
     $_->save( $gamestate ) foreach @{ $self->items };
     $_->save( $gamestate ) foreach @{ $self->locations };
     $self->SUPER::save( $gamestate );
+}
+
+# TODO: this
+sub score( $self, $extra_score ) {
 }
 
 sub set_player( $self, $player ) {
@@ -151,6 +163,8 @@ sub _validate_thing( $self, $config, $what, $key ) {
 }
 
 sub _validate_actors( $self, $config ) {
+    # TODO: Validate actors in locations
+    # TODO: Validate items in locations
     return $self->_validate_thing( $config, 'actor', 'actors' );
 }
 
@@ -159,6 +173,9 @@ sub _validate_items( $self, $config ) {
 }
 
 sub _validate_locations( $self, $config ) {
+    # TODO: Validate items in locations
+    # TODO: Validate exits
+    # TODO: validate actions
     my $valid = $self->_validate_thing( $config, 'location', 'locations' );
 
     my @locations = keys %{ $config->{ locations }};
@@ -179,12 +196,6 @@ sub _validate_locations( $self, $config ) {
 
     return $valid;
 }
-
-# TODO: Validate exits
-# TODO: Validate items in locations
-# TODO: Validate actors in locations
-# TODO: Validate game over conditions
-# TODO: Validate talk (generic - anything you say)
 
 sub _ng_actors( $self, $config ) {
     die "No adventure configuration in _ng_actors()" unless $config;
