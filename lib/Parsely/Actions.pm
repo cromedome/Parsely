@@ -18,16 +18,21 @@ has _dispatch => (
     }},
 );
 
-sub go( $self, $action, $args ) {
-    croak "No action specified to go()!"  unless $action;
-    warn  "No arguments provided to go()" unless $args;
-    return $self->_dispatch->{ $action }->( $args );
-}
+sub move( $args ) {
+    my $action    = $args->{ action };
+    my $adventure = $args->{ adventure };
+    my $player    = $adventure->player;
 
-sub move( $self, $args ) {
-    croak "No destination provided to Move::action()!" unless $args->{ dest };
-    # TODO: make sure we can actually move in that direction
-    return $self->locations->{ $args->{ dest } }->enter;
+    croak "No destination provided to Move::action()!" unless $action;
+
+    $action =~ /^(\w+) (.*)?$/;
+    my $exits = $adventure->locations->{ $player->current_location }->{ exits };
+    if( exists $exits->{ $2 } ) {
+        return $args->{ adventure }->locations->{ $exits->{ $2 }}->enter({ player => $adventure->player });
+    }
+    else {
+        return "I can't go that way!";
+    }
 }
 
 sub talk( $self, $args ) {

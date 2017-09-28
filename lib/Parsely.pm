@@ -52,9 +52,13 @@ sub new_game( $self, $adventure ) {
     croak "No game specified to new_game()" unless $adventure;
 
     $self->reset;
-    $self->adventure->new_game( $adventure );
     $self->adventure->set_player( $self->player );
+    $self->adventure->new_game( $adventure );
     return $self->start_game;
+}
+
+sub available_games( $self ) {
+    # TODO: this!
 }
 
 sub load( $self, $adventure ) {
@@ -89,8 +93,7 @@ sub save( $self ) {
 
 sub start_game( $self ) {
     $self->player->current_location( $self->player->start_location );
-    # TODO: look at room, set visited property
-    return 1;
+    return $self->adventure->locations->{ $self->player->current_location };
 }
 
 sub game_over( $self, $extra_score ){
@@ -99,11 +102,11 @@ sub game_over( $self, $extra_score ){
     return 1;
 }
 
-sub do_action( $self, $action, $args ) {
-    $self->adventure->do_action( $action, $args );
+sub do_action( $self, $action ) {
+    my $response = $self->adventure->do_action( $action );
     $self->adventure->save( $self->gamestate );
 
-    return 1;
+    return $response;
 }
 
 1;

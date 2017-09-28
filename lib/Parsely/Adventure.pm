@@ -18,7 +18,7 @@ extends 'Parsely::Thing';
 has _action_dispatch => (
     is      => 'ro',
     isa     => InstanceOf[ "Parsely::Actions" ],
-    default => sub{ return Parsely::Actions->new },
+    default => sub{ return Parsely::Actions->new; },
 );
 
 has actors => (
@@ -50,11 +50,27 @@ has _slugs => (
     default => sub{ {} },
 );
 
-sub do_action( $self, $action, $args ) {
-    $args->{ player } = $self->player;
-    # Parse out an action, call appropriate code.
-    my $role;
-    $role->( $args );
+sub do_action( $self, $action ) {
+    croak "No action given to do_action()!" unless $action;
+
+    my $args = {
+        adventure => $self,
+        action    => $action,
+    };
+
+    my $curr_loc = $self->player->current_location;
+    if( exists $self->locations->{ $curr_loc }->{ actions }->{ $action } ) {
+        $self->locations->{ $curr_loc }->{ actions }->{ $action }->{ code }->( $args );
+    }
+    else {
+        $action =~ /^(\w+)( .*)?$/;
+        if( exists $self->locations->{ $curr_loc }->actions->{ $1 } ) {
+            $self->locations->{ $curr_loc }->{ actions }->{ $1 }->{ code }->( $args );
+        }
+        else {
+            return "Do what?";
+        }
+    }
 }
 
 sub get_location( $self, $location ) {
@@ -87,11 +103,13 @@ sub new_game( $self, $adventure ) {
             $self->_ng_actors( $config );
             $self->_ng_items( $config );
             $self->_ng_locations( $config );
+            $self->player->start_location( $config->{ player }->{ start_location } );
         }
     }
     else {
         die "No configuration available for $adventure!";
     }
+
     return 1;
 }
 
@@ -233,8 +251,6 @@ sub _ng_locations( $self, $config ) {
 
     my @locations;
     for my $location( keys %{ $config->{ locations }}) {
-        $self->_check_slug( $location, 'location' );
-    
         $self->_build_actions( $location, $config );
         
         $self->locations->{ $location } = Parsely::Location->new({ 
@@ -255,7 +271,7 @@ sub _build_actions( $self, $location, $config ) {
         my $action_data = $loc_info->{ $state }->{ actions };
 
         $self->_load_actions( $new_actions, $action_data ) if $action_data;
-        
+
         foreach my $actor( @{ $loc_info->{ $state }->{ actors }} ) {
             my $actor_info = 
                 $config->{ actors }->{ $actor }->{ $self->actors->{ $actor }->state };
@@ -272,7 +288,7 @@ sub _build_actions( $self, $location, $config ) {
                 if $item_info->{ actions };
         }
 
-        $loc_info->{ $state }->{ actions }= $new_actions;
+        $loc_info->{ $state }->{ actions } = $new_actions;
     }
     
 }

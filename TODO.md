@@ -54,8 +54,6 @@ Player:
 
 in move game action, copy adventure actions into room when moving
 
-move = run = walk = go. Set visited property
-
 Talk: 
 - This is an example of when a good idea goes bad :) "It's a simple game - how long can it take?!?"
 - Didn't take long to make a base Thing
@@ -69,3 +67,8 @@ Items, actors, locations:
 made this arrayrefs at first
 and then I realized I'd actually have to use them ;)
 and so I turned them to hashrefs
+
+Actions:
+held together with bailing wire and duct tape
+it's a hot mess
+should be roles
