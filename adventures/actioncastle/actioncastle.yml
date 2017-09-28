@@ -167,8 +167,6 @@ actors:
                 use candle: 
                     result: The candle gives off a strange, acrid-smelling smoke. The ghost drops its crown and flees.
                     inventory: dungeon:crown
-                take:
-                    role: take
     princess:
         default:
             name: Princess
@@ -292,7 +290,7 @@ actors:
                         - hit troll
                         - hit troll with branch
                 give fish to troll: 
-                    result: if you give him the fish add the east exit to the bridge
+                    result: The troll eats the fish and turns away from you.
                     unblocks: courtyard
                     aliases:
                         - feed fish to troll
