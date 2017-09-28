@@ -154,7 +154,6 @@ actors:
             description: An ornate golden throne.
             actions:
                 sit:
-                    role: sit
                     property: royalty
                     args:
                         0: You think better of it since you are not royalty.
@@ -170,70 +169,60 @@ actors:
                     inventory: dungeon:crown
                 take:
                     role: take
-    #princess:
-        #name: Princess
-        #properties:
-            #happy: 0
-            #royalty: 0
-        #check_property:
-            #happy: 
-                #is: 0
-                #description: The princess is beautiful, sad, and lonely. She awaits her prince.
-                #talk:
-                    #generic: She looks sad, but says nothing.
-                #actions:
-                    #kiss princess: 
-                        #result: She slaps you - hard!
-                        #aliases:
-                            #- kiss the princess
-                    #give princess the rose: 
-                        #result: She takes it and smiles. 
-                        #description: The princess is beautiful, happy, but lonely. She awaits her prince.
-                        #properties:
-                            #happy: 1
-            #happy: 
-                #is: 1
-                #description: The princess is beautiful, happy, but lonely. She awaits her prince.
-                #talk:
-                    #generic: What would you like to talk about?
-                    #ghost: My father haunts the dungeon as a restless spirit.
-                    #crown: Only the rightful heir to the thrown may wear it.
-                    #you: I cannot leave this tower until I am married.
-                    #throne: Only the king may sit on the throne.
-                #actions:
-                    #kiss princess: 
-                        #result: She slaps you - hard!
-                        #aliases:
-                            #- kiss the princess
-                    #give princess the rose: 
-                        #result: She takes it and smiles. 
-                        #description: The princess is beautiful, happy, but lonely. She awaits her prince.
-                        #properties:
-                            #happy: 1
-            #royalty: 1
-    #happyprincess:
-        #name: Princess
-        #description: 
-        #talk :
-        #actions :
-            #kiss: She slaps you.
-            ##kiss: She slaps you. "Not until we're wed!"
-            ##marry (no crown): "You're not royalty."
-            ##marry (has crown): "My father's crown! You have put his soul at rest and you may now succeed him! I accept." Places crown on your head. Set royalty = 1. Transform koguard to humbleguard. Change the description of the throne room to include revelers
-    #queen:
-        #name: Queen
-        #description: The queen is beautiful, happy, and has found her king.
-        #talk :
-            #generic : What would you like to talk about?
-            #throne : Only the king may sit on the throne.
-        #actions :
-            #kiss: *smooch*
+    princess:
+        default:
+            name: Princess
+            description: The princess is beautiful, sad, and lonely. She awaits her prince.
+            talk:
+                generic: She looks sad, but says nothing.
+            actions:
+                kiss princess: 
+                    result: She slaps you - hard!
+                    aliases:
+                        - kiss the princess
+                give princess the rose: 
+                    result: She takes it and smiles. 
+                    description: The princess is beautiful, happy, but lonely. She awaits her prince.
+                    change_state: happy
+        happy:
+            name: Happy Princess
+            description: The princess is beautiful, happy, but lonely. She awaits her prince.
+            talk:
+                generic: What would you like to talk about?
+                ghost: My father haunts the dungeon as a restless spirit.
+                crown: Only the rightful heir to the thrown may wear it.
+                you: I cannot leave this tower until I am married.
+                throne: Only the king may sit on the throne.
+            actions:
+                kiss princess: 
+                    result: "She says, 'Not until we are married!'"
+                    aliases:
+                        - kiss the princess
+                marry princess:
+                    result: "She says, 'My father's crown! You have put his soul to rest, and may now succeed him! I accept!' She places the crown upon your head."
+                    description: The princess is beautiful, happy, but lonely. She awaits her prince.
+                    change_state: queen,guard:humbled
+                    aliases:
+                        - marry the princess
+                        - propose to princess
+                        - propose
+                        - propose to the princess
+
+        queen:
+            name: The Queen
+            description: The queen is beautiful, happy, and has found her king.
+            talk:
+                generic: What would you like to talk about?
+                throne: Only the king may sit on the throne.
+            actions :
+                kiss: "*smooch*"
+
     door:
         default:
             name: Locked Door
             description: A heavy, oaken door. It is locked.
             blocks: up
-            actions :
+            actions:
                 kick door: 
                     result: Ouch! That hurts!
                 open door: 
@@ -256,36 +245,30 @@ actors:
                     result: The door is already open.
                 open door with key: 
                     result: The door is already open.
-    #guard:
-        #name: Guard
-        #description: The guard stands tall, and is brandishing his short sword. He looks pretty tough.
-        #blocks: east
-        #conditions:
-            #player:
-                #properties:
-                    #royalty:
-                        #is: 1
-                        #result: The guard awakens.
-                        #description: "The guard stands on one knee and says, 'Hail, my King!'"
-                        #properties:
-                            #ko: 0
-        #actions:
-            #fight guard:
-                #result: The guard beats you to death.
-                #game_over: 1
-                #aliases:
-                    #- attack guard
-                    #- punch guard
-            #hit with branch: 
-                #result: You knock the guard out with the branch. The branch breaks. The guard drops a key.
-                #items:
-                    #- key
-                #description: The guard is slumped over, and appears to be knocked out.
-                #inventory:
-                    #branch: destroy
-                #properties:
-                    #ko: 1
-                #unblocks: east
+    guard:
+        default:
+            name: Guard
+            description: The guard stands tall, and is brandishing his short sword. He looks pretty tough.
+            blocks: east
+            actions:
+                fight guard:
+                    result: The guard beats you to death.
+                    game_over: -1
+                    aliases:
+                        - attack guard
+                        - punch guard
+                hit with branch: 
+                    result: You knock the guard out with the branch. The guard drops a key.
+                    items:
+                        - key
+                    unblocks: east
+                    change_state: ko
+        ko:
+            name: Unconcious Guard
+            description: The guard is slumped over, and appears to be knocked out.
+        humbled:
+            name: Humbled Guard
+            description: "The guard stands on one knee and says, 'Hail, my King!'"
     rosebush:
         default:
             name: Rosebush
@@ -319,14 +302,14 @@ items:
             name: Strange Candle
             description: The candle is covered in strange runes.
             actions:
-                read: The runes seem to be a spell of exorcism.
+                read: 
+                    result: The runes seem to be a spell of exorcism.
     crown:
         default:
             name: Crown
             description: A golden crown fit for royalty.
             actions:
                 wear crown: 
-                    role: wear 
                     property: royalty
                     args:
                         0: You wouldn't feel right wearing this crown since you are not royalty.
