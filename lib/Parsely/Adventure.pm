@@ -40,7 +40,7 @@ has locations => (
 );
 
 has player => (
-    is  => 'ro',
+    is  => 'rw',
     isa => InstanceOf[ 'Parsely::Player' ],
 );
 
@@ -59,16 +59,16 @@ sub do_action( $self, $action, $args ) {
 
 sub get_location( $self, $location ) {
     croak "No location specified to get_location()" unless $location;
+    croak "Location '$location' not found by get_location() in " . $self->adventure->name
+        unless exists $self->locations->{ $location };
 
-    for my $loc( @{ $self->locations } ) {
-        return $loc if $loc->slug eq $location;
-    }
-
-    die "Location '$location' not found by get_location() in " . $self->adventure->name;
+    return $self->locations->{ $location };
 }
 
 sub load( $self, $gamestate, $adventure ) {
-    $_->load( $gamestate, $_->slug ) foreach @{ $self->locations };
+    $self->actors->{ $_ }->load( $gamestate, $_ ) foreach keys %{ $self->actors };
+    $self->items->{ $_ }->load( $gamestate, $_ ) foreach keys %{ $self->items };
+    $self->locations->{ $_ }->load( $gamestate, $_ ) foreach keys %{ $self->locations };
     return 1;
 }
 
@@ -96,9 +96,9 @@ sub new_game( $self, $adventure ) {
 }
 
 sub save( $self, $gamestate ) {
-    $_->save( $gamestate ) foreach @{ $self->actors };
-    $_->save( $gamestate ) foreach @{ $self->items };
-    $_->save( $gamestate ) foreach @{ $self->locations };
+    $self->actors->{ $_ }->save( $gamestate ) foreach keys %{ $self->actors };
+    $self->items->{ $_ }->save( $gamestate ) foreach keys %{ $self->items };
+    $self->locations->{ $_ }->save( $gamestate ) foreach keys %{ $self->locations };
     $self->SUPER::save( $gamestate );
 }
 
