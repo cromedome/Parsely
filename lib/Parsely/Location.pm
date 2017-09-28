@@ -46,7 +46,7 @@ sub enter( $self, $args ) {
     croak "No player specified to enter()!" unless $args->{ player };
 
     $args->{ player }->current_location( $self->slug );
-    $self->set_property( 'visited', 0 );
+    $self->set_property( 'visited', 1 );
     return {
         game_over => $self->get_property( 'game_over' ) //= 0,
         #description => $self->get_property( 'visited' ) ? $self->description : 

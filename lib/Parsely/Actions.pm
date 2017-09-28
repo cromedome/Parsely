@@ -9,8 +9,12 @@ has _dispatch => (
     is      => 'ro',
     isa     => HashRef,
     default => sub {{
-        move => \&move,
-        talk => \&talk,
+        move       => { code => \&move },
+        run        => { code => \&move },
+        walk       => { code => \&move },
+        go         => { code => \&move },
+        talk       => { code => \&talk },
+        'speak to' => { code => \&talk },
     }},
 );
 

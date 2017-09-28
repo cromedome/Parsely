@@ -26,6 +26,7 @@ requires 'Type::Tiny';
 requires 'Cache::FastMmap';
 requires 'Import::Base';
 requires 'YAML';
+requires 'Hash::Merge';
 
 on 'develop' => sub {
     requires 'App::Ack';

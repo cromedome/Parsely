@@ -11,28 +11,32 @@ use Parsely::Actor;
 use Parsely::Item;
 use Parsely::Thing;
 use Parsely::Location;
+use Data::Dumper;
 
 extends 'Parsely::Thing';
 
-has actions => (
-    is      => 'rw',
-    isa     => HashRef,
-    default => sub {{}},
+has _action_dispatch => (
+    is      => 'ro',
+    isa     => InstanceOf[ "Parsely::Actions" ],
+    default => sub{ return Parsely::Actions->new },
 );
 
 has actors => (
-    is  => 'rw',
-    isa => ArrayRef[ InstanceOf[ "Parsely::Actor" ]],
+    is      => 'rw',
+    isa     => HashRef[ InstanceOf[ "Parsely::Actor" ]],
+    default => sub{{}},
 );
 
 has items => (
-    is  => 'rw',
-    isa => ArrayRef[ InstanceOf[ "Parsely::Item" ]],
+    is      => 'rw',
+    isa     => HashRef[ InstanceOf[ "Parsely::Item" ]],
+    default => sub{{}},
 );
 
 has locations => (
-    is  => 'rw',
-    isa => ArrayRef[ InstanceOf[ "Parsely::Location" ]],
+    is      => 'rw',
+    isa     => HashRef[ InstanceOf[ "Parsely::Location" ]],
+    default => sub{{}},
 );
 
 has player => (
@@ -80,10 +84,9 @@ sub new_game( $self, $adventure ) {
             $self->_check_slug( $adventure, 'adventure' );
             $self->slug( $adventure );
             $self->name( $config->{ name } );
-            $self->_ng_locations( $config );
             $self->_ng_actors( $config );
             $self->_ng_items( $config );
-            # TODO: load actions
+            $self->_ng_locations( $config );
         }
     }
     else {
@@ -112,9 +115,9 @@ sub validate( $self, $config ) {
     croak "No adventure configuration in validate()" unless $config;
     
     my $valid = 1;
-    $valid = $self->_validate_locations( $config );
     $valid = $self->_validate_actors   ( $config );
     $valid = $self->_validate_items    ( $config );
+    $valid = $self->_validate_locations( $config );
 
     return $valid;
 }
@@ -198,51 +201,102 @@ sub _validate_locations( $self, $config ) {
 }
 
 sub _ng_actors( $self, $config ) {
-    die "No adventure configuration in _ng_actors()" unless $config;
+    croak "No adventure configuration in _ng_actors()" unless $config;
 
     my @actors;
     for my $actor( keys %{ $config->{ actors }}) {
         $self->_check_slug( $actor, 'actor' );
 
-        push @actors, Parsely::Actor->new({ 
+        $self->actors->{ $actor } = Parsely::Actor->new({ 
             slug        => $actor,
             _state_data => $config->{ actors }->{ $actor },
         });
     }
-
-    $self->actors( \@actors );
 }
 
 sub _ng_items( $self, $config ) {
-    die "No adventure configuration in _ng_items()" unless $config;
+    croak "No adventure configuration in _ng_items()" unless $config;
 
     my @items;
     for my $item( keys %{ $config->{ items }}) {
         $self->_check_slug( $item, 'item' );
 
-        push @items, Parsely::Item->new({ 
+        $self->items->{ $item } = Parsely::Item->new({ 
             slug        => $item,
             _state_data => $config->{ items }->{ $item },
         });
     }
-
-    $self->items( \@items );
 }
 
 sub _ng_locations( $self, $config ) {
-    die "No adventure configuration in _ng_locations()" unless $config;
+    croak "No adventure configuration in _ng_locations()" unless $config;
 
     my @locations;
     for my $location( keys %{ $config->{ locations }}) {
         $self->_check_slug( $location, 'location' );
-
-        push @locations, Parsely::Location->new({ 
+    
+        $self->_build_actions( $location, $config );
+        
+        $self->locations->{ $location } = Parsely::Location->new({ 
             slug        => $location,
             _state_data => $config->{ locations }->{ $location },
         });
     }
+}
 
-    $self->locations( \@locations );
+sub _build_actions( $self, $location, $config ) {
+    croak "No location given to _build_actions()"          unless $location;
+    croak "No adventure configuration in _build_actions()" unless $config;
+
+    my $loc_info    = $config->{ locations }->{ $location };
+    my $new_actions = $self->_action_dispatch->_dispatch;
+
+    foreach my $state( keys %{ $loc_info })  {
+        my $action_data = $loc_info->{ $state }->{ actions };
+
+        $self->_load_actions( $new_actions, $action_data ) if $action_data;
+        
+        foreach my $actor( @{ $loc_info->{ $state }->{ actors }} ) {
+            my $actor_info = 
+                $config->{ actors }->{ $actor }->{ $self->actors->{ $actor }->state };
+            $self->_load_actions( $new_actions, $actor_info->{ actions })
+                if $actor_info->{ actions };
+
+            # TODO: actions on any item the actor has, too.
+        }
+
+        foreach my $item( @{ $loc_info->{ $state }->{ items }} ) {
+            my $item_info = 
+                $config->{ items }->{ $item }->{ $self->items->{ $item }->state };
+            $self->_load_actions( $new_actions, $item_info->{ actions }) 
+                if $item_info->{ actions };
+        }
+
+        $loc_info->{ $state }->{ actions }= $new_actions;
+    }
+    
+}
+
+sub _load_actions( $self, $new_actions, $action_info ) {
+    croak "No action list given to _load_actions()!"   unless $new_actions;
+    croak "No action data provided to _load_actions()" unless $action_info;
+
+    foreach my $action( keys %$action_info ) {
+        $action =~ /^(\w+)( .*)?$/;
+        my $akey = $1 . ($2 // '');
+        $new_actions->{ $akey }->{ code   }    = $new_actions->{ $1 }->{ code };
+        $new_actions->{ $akey }->{ result }    = $action_info->{ $action }->{ result } // '';
+        $new_actions->{ $akey }->{ game_over } = $action_info->{ $action }->{ game_over } // 0;
+        $new_actions->{ $akey }->{ blocks }    = $action_info->{ $action }->{ blocks } // '';
+        $new_actions->{ $akey }->{ unblocks }  = $action_info->{ $action }->{ unblocks } // '';
+        $new_actions->{ $akey }->{ property }  = $action_info->{ $action }->{ property } // '';
+        $new_actions->{ $akey }->{ args }      = $action_info->{ $action }->{ args } // {};
+
+        foreach my $alias( @{ $action_info->{ $action }->{ aliases }} ) {
+            $new_actions->{ $alias }->{ code } = $new_actions->{ $1 }->{ code };
+        }
+    }
+    return $new_actions;
 }
 
 1;

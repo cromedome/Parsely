@@ -7,7 +7,6 @@ TODO: visited properties in locations. Save them!
 TODO: Score!
 
 ACTIONS: talk, look, attack, unlock, light, take, move, open, block
-TODO: action dispatch table.
 
 Goals:
 - Easy for non-techies to make content for
@@ -27,6 +26,7 @@ Expansion ideas:
 - Media in game folder
 - AJAX-y client
 - All-in-one client and game in Electron
+- Actions are not very efficient. 
 
 Add docs for mission building.
 
@@ -57,8 +57,15 @@ in move game action, copy adventure actions into room when moving
 move = run = walk = go. Set visited property
 
 Talk: 
+- This is an example of when a good idea goes bad :) "It's a simple game - how long can it take?!?"
 - Didn't take long to make a base Thing
 - Immutable actors, or complex definition? Neither - state!
 - Boilerplate validation: how I fixed.
 - Import::Base
 - Could have used roles. Future iteration!
+- Lions and tigers and circular references, oh my!
+
+Items, actors, locations:
+made this arrayrefs at first
+and then I realized I'd actually have to use them ;)
+and so I turned them to hashrefs

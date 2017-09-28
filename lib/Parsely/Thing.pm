@@ -11,6 +11,13 @@ has slug => (
     required => 1,
 );
 
+has state => (
+    is       => 'rw',
+    isa      => Str,
+    required => 1,
+    default  => 'default',
+);
+
 has name => (
     is  => 'rw',
     isa => Str,
