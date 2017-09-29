@@ -8,12 +8,6 @@ TODO: Score!
 
 ACTIONS: talk, look, attack, unlock, light, take, move, open, block
 
-Goals:
-- Easy for non-techies to make content for
-- Easy to run and play
-- Few dependencies as possible
-- Get a little out of my comfort zone (YAML, Mojo)
-
 Needs:
 - more testing
 - more validation
@@ -21,7 +15,7 @@ Needs:
 Expansion ideas:
 - Multiplayer? (multiple people playing single-player games)
 - Chat?
-- Multiple things per location
+- Multiple things per location (2x guards)
 - Deployment
 - Media in game folder
 - AJAX-y client
@@ -42,33 +36,5 @@ Tests:
 - Test that exit roles return exits (?)
 - location: make sure ancestor and my set_state work
 
-Engine: 
-- in single player games, doesn't do much
-- Will do more for multiplayer.
-
-Player: 
-- Part of game, not mission.
-- Needed for an eventual multiplayer engine.
-- But.... how does mission alter player?
-- Ran into this problem, need to pass player handle to mission.
-
 in move game action, copy adventure actions into room when moving
 
-Talk: 
-- This is an example of when a good idea goes bad :) "It's a simple game - how long can it take?!?"
-- Didn't take long to make a base Thing
-- Immutable actors, or complex definition? Neither - state!
-- Boilerplate validation: how I fixed.
-- Import::Base
-- Could have used roles. Future iteration!
-- Lions and tigers and circular references, oh my!
-
-Items, actors, locations:
-made this arrayrefs at first
-and then I realized I'd actually have to use them ;)
-and so I turned them to hashrefs
-
-Actions:
-held together with bailing wire and duct tape
-it's a hot mess
-should be roles
